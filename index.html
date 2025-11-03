@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Formularoo">
     
     <meta name="google-adsense-account" content="ca-pub-9231549164265747">
@@ -46,12 +46,25 @@
     
     <!-- Custom styles for dark theme -->
     <style>
+
+        html {
+          background-color: #0f172a;
+        }
         body {
             background: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
             padding-top: env(safe-area-inset-top);
             min-height: 100vh;
         }
-        
+        body::before {
+          content: "";
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: env(safe-area-inset-top);
+          background: #0f172a;
+          z-index: 9999;
+        }
         .card-hover {
             transition: all 0.3s ease;
         }
