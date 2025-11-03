@@ -110,7 +110,7 @@
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const currentY = window.scrollY;
-          if (currentY > lastScrollY && currentY > 50) {
+          if (currentY > lastScrollY && currentY > 10) {
             nav.classList.add('hidden');
           } else {
             nav.classList.remove('hidden');
