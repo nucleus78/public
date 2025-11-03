@@ -1,0 +1,393 @@
+<!-- Unit Converter Page -->
+<!-- Convert between metric and imperial units for all measurement types -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Unit Converter</h1>
+        <p class="text-gray-400 text-lg">Convert between metric and imperial units for length, weight, volume, area, temperature, and speed</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Unit Converter Form -->
+        <form id="unit-converter-form" class="space-y-6" onsubmit="convertUnits(event)">
+            <!-- Measurement Type Selection -->
+            <div>
+                <label for="measurement-type" class="block text-sm font-medium text-gray-300 mb-2">
+                    Measurement Type
+                </label>
+                <select 
+                    id="measurement-type" 
+                    name="measurement-type"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                    <option value="length">Length</option>
+                    <option value="weight">Weight / Mass</option>
+                    <option value="volume">Volume</option>
+                    <option value="area">Area</option>
+                    <option value="temperature">Temperature</option>
+                    <option value="speed">Speed</option>
+                </select>
+            </div>
+
+            <!-- Value Input and Unit Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="input-value" class="block text-sm font-medium text-gray-300 mb-2">
+                        Value
+                    </label>
+                    <input 
+                        type="number" 
+                        id="input-value" 
+                        name="input-value"
+                        step="any"
+                        placeholder="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                </div>
+                <div>
+                    <label for="input-unit" class="block text-sm font-medium text-gray-300 mb-2">
+                        From Unit
+                    </label>
+                    <select 
+                        id="input-unit" 
+                        name="input-unit"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                        <!-- Units will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl">
+                Convert
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="conversion-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Result -->
+                    <div class="pb-4 border-b border-slate-600/50">
+                        <p class="text-sm text-gray-400 mb-2">Original Value</p>
+                        <p class="text-2xl font-bold text-blue-400 font-mono" id="original-display"></p>
+                    </div>
+
+                    <!-- All Unit Conversions -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Converted Values</h4>
+                        <div id="all-conversions" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- All conversions will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Unit Conversions
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    This converter supports conversions between metric (SI) and imperial units across multiple measurement categories.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Supported Categories</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Length: mm, cm, m, km, inches, feet, yards, miles</li>
+                            <li>• Weight: g, kg, oz, lbs, tons</li>
+                            <li>• Volume: mL, L, fl oz, cups, pints, quarts, gallons</li>
+                            <li>• Area: m², km², in², ft², acres, hectares</li>
+                            <li>• Temperature: °C, °F, K</li>
+                            <li>• Speed: m/s, km/h, mph, knots</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Common Conversions</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• 1 inch = 2.54 cm</li>
+                            <li>• 1 mile = 1.609 km</li>
+                            <li>• 1 pound = 0.4536 kg</li>
+                            <li>• 1 gallon = 3.785 L</li>
+                            <li>• 1 acre = 0.4047 hectares</li>
+                            <li>• 1 mph = 1.609 km/h</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Unit Converter -->
+<script>
+    // Define units for each measurement type
+    const unitDefinitions = {
+        length: {
+            units: {
+                'millimeters': { factor: 0.001, label: 'Millimeters (mm)' },
+                'centimeters': { factor: 0.01, label: 'Centimeters (cm)' },
+                'meters': { factor: 1, label: 'Meters (m)' },
+                'kilometers': { factor: 1000, label: 'Kilometers (km)' },
+                'inches': { factor: 0.0254, label: 'Inches (in)' },
+                'feet': { factor: 0.3048, label: 'Feet (ft)' },
+                'yards': { factor: 0.9144, label: 'Yards (yd)' },
+                'miles': { factor: 1609.34, label: 'Miles (mi)' }
+            },
+            baseUnit: 'meters'
+        },
+        weight: {
+            units: {
+                'grams': { factor: 0.001, label: 'Grams (g)' },
+                'kilograms': { factor: 1, label: 'Kilograms (kg)' },
+                'metric-tons': { factor: 1000, label: 'Metric Tons (t)' },
+                'ounces': { factor: 0.0283495, label: 'Ounces (oz)' },
+                'pounds': { factor: 0.453592, label: 'Pounds (lbs)' },
+                'us-tons': { factor: 907.185, label: 'US Tons' },
+                'uk-tons': { factor: 1016.05, label: 'UK Tons' }
+            },
+            baseUnit: 'kilograms'
+        },
+        volume: {
+            units: {
+                'milliliters': { factor: 0.001, label: 'Milliliters (mL)' },
+                'liters': { factor: 1, label: 'Liters (L)' },
+                'fluid-ounces-us': { factor: 0.0295735, label: 'US Fluid Ounces (fl oz)' },
+                'fluid-ounces-uk': { factor: 0.0284131, label: 'UK Fluid Ounces (fl oz)' },
+                'cups-us': { factor: 0.236588, label: 'US Cups' },
+                'pints-us': { factor: 0.473176, label: 'US Pints' },
+                'quarts-us': { factor: 0.946353, label: 'US Quarts' },
+                'gallons-us': { factor: 3.78541, label: 'US Gallons' },
+                'pints-uk': { factor: 0.568261, label: 'UK Pints' },
+                'gallons-uk': { factor: 4.54609, label: 'UK Gallons' }
+            },
+            baseUnit: 'liters'
+        },
+        area: {
+            units: {
+                'square-millimeters': { factor: 0.000001, label: 'Square Millimeters (mm²)' },
+                'square-centimeters': { factor: 0.0001, label: 'Square Centimeters (cm²)' },
+                'square-meters': { factor: 1, label: 'Square Meters (m²)' },
+                'hectares': { factor: 10000, label: 'Hectares (ha)' },
+                'square-kilometers': { factor: 1000000, label: 'Square Kilometers (km²)' },
+                'square-inches': { factor: 0.00064516, label: 'Square Inches (in²)' },
+                'square-feet': { factor: 0.092903, label: 'Square Feet (ft²)' },
+                'square-yards': { factor: 0.836127, label: 'Square Yards (yd²)' },
+                'acres': { factor: 4046.86, label: 'Acres' },
+                'square-miles': { factor: 2589988.11, label: 'Square Miles (mi²)' }
+            },
+            baseUnit: 'square-meters'
+        },
+        temperature: {
+            units: {
+                'celsius': { label: 'Celsius (°C)', special: true },
+                'fahrenheit': { label: 'Fahrenheit (°F)', special: true },
+                'kelvin': { label: 'Kelvin (K)', special: true }
+            },
+            baseUnit: 'celsius'
+        },
+        speed: {
+            units: {
+                'meters-per-second': { factor: 1, label: 'Meters per Second (m/s)' },
+                'kilometers-per-hour': { factor: 0.277778, label: 'Kilometers per Hour (km/h)' },
+                'miles-per-hour': { factor: 0.44704, label: 'Miles per Hour (mph)' },
+                'feet-per-second': { factor: 0.3048, label: 'Feet per Second (ft/s)' },
+                'knots': { factor: 0.514444, label: 'Knots (kn)' }
+            },
+            baseUnit: 'meters-per-second'
+        }
+    };
+    
+    // Temperature conversion functions
+    function celsiusToFahrenheit(c) {
+        return (c * 9/5) + 32;
+    }
+    
+    function fahrenheitToCelsius(f) {
+        return (f - 32) * 5/9;
+    }
+    
+    function celsiusToKelvin(c) {
+        return c + 273.15;
+    }
+    
+    function kelvinToCelsius(k) {
+        return k - 273.15;
+    }
+    
+    function fahrenheitToKelvin(f) {
+        return celsiusToKelvin(fahrenheitToCelsius(f));
+    }
+    
+    function kelvinToFahrenheit(k) {
+        return celsiusToFahrenheit(kelvinToCelsius(k));
+    }
+    
+    // Populate unit dropdown based on measurement type
+    function updateUnitDropdown() {
+        const measurementType = document.getElementById('measurement-type').value;
+        const unitSelect = document.getElementById('input-unit');
+        const units = unitDefinitions[measurementType].units;
+        
+        unitSelect.innerHTML = '';
+        
+        for (const [key, unit] of Object.entries(units)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = unit.label;
+            unitSelect.appendChild(option);
+        }
+        
+        // Clear result when changing measurement type
+        document.getElementById('conversion-result').classList.add('hidden');
+    }
+    
+    function formatNumber(num, decimals = 4) {
+        if (num === 0) return '0';
+        if (Math.abs(num) < 0.0001) {
+            return num.toExponential(3);
+        }
+        if (Math.abs(num) >= 1000000) {
+            return num.toExponential(3);
+        }
+        // Remove trailing zeros
+        return parseFloat(num.toFixed(decimals)).toString();
+    }
+    
+    function convertUnits(event) {
+        event.preventDefault();
+        
+        const measurementType = document.getElementById('measurement-type').value;
+        const inputValue = parseFloat(document.getElementById('input-value').value);
+        const inputUnit = document.getElementById('input-unit').value;
+        
+        if (isNaN(inputValue)) {
+            alert('Please enter a valid number.');
+            return;
+        }
+        
+        const units = unitDefinitions[measurementType].units;
+        
+        // Display original value
+        document.getElementById('original-display').textContent = 
+            `${formatNumber(inputValue)} ${units[inputUnit].label}`;
+        
+        // Handle temperature separately (special conversion)
+        if (measurementType === 'temperature') {
+            let celsius, fahrenheit, kelvin;
+            
+            if (inputUnit === 'celsius') {
+                celsius = inputValue;
+                fahrenheit = celsiusToFahrenheit(celsius);
+                kelvin = celsiusToKelvin(celsius);
+            } else if (inputUnit === 'fahrenheit') {
+                fahrenheit = inputValue;
+                celsius = fahrenheitToCelsius(fahrenheit);
+                kelvin = fahrenheitToKelvin(fahrenheit);
+            } else if (inputUnit === 'kelvin') {
+                kelvin = inputValue;
+                celsius = kelvinToCelsius(kelvin);
+                fahrenheit = kelvinToFahrenheit(kelvin);
+            }
+            
+            const conversions = [
+                { value: celsius, unit: 'Celsius (°C)', key: 'celsius' },
+                { value: fahrenheit, unit: 'Fahrenheit (°F)', key: 'fahrenheit' },
+                { value: kelvin, unit: 'Kelvin (K)', key: 'kelvin' }
+            ];
+            
+            const conversionHTML = conversions.map(item => `
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 ${item.key === inputUnit ? 'ring-2 ring-blue-400' : ''}">
+                    <p class="text-xs text-gray-400 mb-1">${item.unit}</p>
+                    <p class="text-lg font-semibold text-blue-300">${formatNumber(item.value, 2)}</p>
+                </div>
+            `).join('');
+            
+            document.getElementById('all-conversions').innerHTML = conversionHTML;
+        } else {
+            // Convert to base unit first
+            const baseValue = inputValue * units[inputUnit].factor;
+            
+            // Convert to all other units
+            const conversions = [];
+            
+            for (const [key, unit] of Object.entries(units)) {
+                if (key !== inputUnit) {
+                    const convertedValue = baseValue / unit.factor;
+                    conversions.push({
+                        value: convertedValue,
+                        label: unit.label,
+                        key: key
+                    });
+                }
+            }
+            
+            // Sort by value for better display
+            conversions.sort((a, b) => Math.abs(a.value) - Math.abs(b.value));
+            
+            const conversionHTML = conversions.map(item => `
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400 mb-1">${item.label}</p>
+                    <p class="text-lg font-semibold text-blue-300">${formatNumber(item.value)}</p>
+                </div>
+            `).join('');
+            
+            document.getElementById('all-conversions').innerHTML = conversionHTML;
+        }
+        
+        // Show result
+        document.getElementById('conversion-result').classList.remove('hidden');
+        document.getElementById('conversion-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Initialize dropdown when measurement type changes
+    document.getElementById('measurement-type').addEventListener('change', updateUnitDropdown);
+    
+    // Convert on input change for real-time conversion
+    document.getElementById('input-value').addEventListener('input', function() {
+        if (this.value) {
+            convertUnits(new Event('submit'));
+        }
+    });
+    
+    document.getElementById('input-unit').addEventListener('change', function() {
+        const inputValue = document.getElementById('input-value').value;
+        if (inputValue) {
+            convertUnits(new Event('submit'));
+        }
+    });
+    
+    // Initialize on page load
+    updateUnitDropdown();
+</script>
+

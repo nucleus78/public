@@ -1,0 +1,296 @@
+<!-- GST Tax Calculator Page -->
+<!-- This combines the base calculator template with the GST calculator component -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">GST Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate Goods and Services Tax (GST) for Australia and New Zealand</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Country Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex items-center bg-slate-700/50 rounded-lg p-1 border border-slate-600">
+                <button 
+                    type="button"
+                    id="australia-toggle"
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm"
+                    onclick="switchToAustralia()">
+                    Australia (10%)
+                </button>
+                <button 
+                    type="button"
+                    id="newzealand-toggle"
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white"
+                    onclick="switchToNewZealand()">
+                    New Zealand (15%)
+                </button>
+            </div>
+        </div>
+
+        <!-- GST Calculator Form -->
+        <form id="gst-form" class="space-y-6" onsubmit="calculateGST(event)">
+            <!-- Price Input -->
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-300 mb-2">
+                    Price
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                    <input 
+                        type="number" 
+                        id="price" 
+                        name="price"
+                        step="0.01"
+                        min="0"
+                        placeholder="100.00"
+                        class="w-full pl-8 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Enter the price amount</p>
+            </div>
+
+            <!-- Price Type Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">
+                    Price Type
+                </label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="relative flex items-center p-4 bg-slate-700/30 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors">
+                        <input 
+                            type="radio" 
+                            name="price-type" 
+                            value="including"
+                            id="price-including"
+                            checked
+                            class="sr-only peer">
+                        <div class="absolute top-2 right-2 w-5 h-5 border-2 border-slate-500 rounded-full peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-200">Including (Subtracts GST)</p>
+                            <p class="text-xs text-gray-400 mt-1">Price with tax included</p>
+                        </div>
+                    </label>
+                    <label class="relative flex items-center p-4 bg-slate-700/30 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors">
+                        <input 
+                            type="radio" 
+                            name="price-type" 
+                            value="excluding"
+                            id="price-excluding"
+                            class="sr-only peer">
+                        <div class="absolute top-2 right-2 w-5 h-5 border-2 border-slate-500 rounded-full peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-200">Excluding (Adds GST)</p>
+                            <p class="text-xs text-gray-400 mt-1">Price without tax</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg font-semibold text-white hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate GST
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="gst-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- GST Amount -->
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-600/50">
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">GST Amount</p>
+                            <p class="text-3xl font-bold text-emerald-400" id="gst-amount"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400 mb-1" id="gst-rate-label"></p>
+                            <p class="text-lg font-semibold text-gray-300" id="gst-rate"></p>
+                        </div>
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Price Excluding GST</span>
+                            <span class="text-lg font-semibold text-gray-200" id="price-excluding-display"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">GST</span>
+                            <span class="text-lg font-semibold text-emerald-400" id="gst-amount-display"></span>
+                        </div>
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-600/50">
+                            <span class="text-gray-300 font-medium">Price Including GST</span>
+                            <span class="text-2xl font-bold text-white" id="price-including-display"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculation Formula -->
+            <div class="mt-4 bg-slate-900/30 rounded-lg p-4 border border-slate-700/50">
+                <p class="text-xs text-gray-400 mb-2">Calculation Formula</p>
+                <p class="text-sm font-mono text-gray-300" id="calculation-formula"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About GST
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <div id="australia-info" class="block">
+                    <p class="mb-3">
+                        <strong class="text-emerald-400">Australia GST:</strong> Goods and Services Tax (GST) is a broad-based tax of 10% 
+                        on most goods, services, and other items sold or consumed in Australia.
+                    </p>
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg">GST Rate: 10%</p>
+                        <p class="text-sm text-gray-400">GST = Price × 0.10</p>
+                        <p class="text-sm text-gray-400">Price Including GST = Price Excluding GST × 1.10</p>
+                    </div>
+                </div>
+                <div id="newzealand-info" class="hidden">
+                    <p class="mb-3">
+                        <strong class="text-emerald-400">New Zealand GST:</strong> Goods and Services Tax (GST) is a value-added tax of 15% 
+                        on most goods, services, and other items supplied in New Zealand.
+                    </p>
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg">GST Rate: 15%</p>
+                        <p class="text-sm text-gray-400">GST = Price × 0.15</p>
+                        <p class="text-sm text-gray-400">Price Including GST = Price Excluding GST × 1.15</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">
+                    <strong class="text-gray-300">Note:</strong> GST rates are correct as of 2024. Some goods and services may be exempt or zero-rated. 
+                    Always consult with a tax professional for specific advice.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for GST Calculation -->
+<script>
+    let isAustralia = true; // Default to Australia
+    const AUSTRALIA_GST = 0.10; // 10%
+    const NEWZEALAND_GST = 0.15; // 15%
+    
+    function switchToAustralia() {
+        if (isAustralia) return;
+        
+        isAustralia = true;
+        
+        // Update toggle buttons
+        document.getElementById('australia-toggle').className = 'px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm';
+        document.getElementById('newzealand-toggle').className = 'px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white';
+        
+        // Update info section
+        document.getElementById('australia-info').classList.remove('hidden');
+        document.getElementById('australia-info').classList.add('block');
+        document.getElementById('newzealand-info').classList.add('hidden');
+        document.getElementById('newzealand-info').classList.remove('block');
+        
+        // Recalculate if there's a result
+        if (!document.getElementById('gst-result').classList.contains('hidden')) {
+            calculateGST(event);
+        }
+    }
+    
+    function switchToNewZealand() {
+        if (!isAustralia) return;
+        
+        isAustralia = false;
+        
+        // Update toggle buttons
+        document.getElementById('newzealand-toggle').className = 'px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm';
+        document.getElementById('australia-toggle').className = 'px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-400 hover:text-white';
+        
+        // Update info section
+        document.getElementById('newzealand-info').classList.remove('hidden');
+        document.getElementById('newzealand-info').classList.add('block');
+        document.getElementById('australia-info').classList.add('hidden');
+        document.getElementById('australia-info').classList.remove('block');
+        
+        // Recalculate if there's a result
+        if (!document.getElementById('gst-result').classList.contains('hidden')) {
+            calculateGST(event);
+        }
+    }
+    
+    function calculateGST(event) {
+        if (event) event.preventDefault();
+        
+        const price = parseFloat(document.getElementById('price').value);
+        const priceType = document.querySelector('input[name="price-type"]:checked').value;
+        
+        if (!price || price <= 0) {
+            alert('Please enter a valid price');
+            return;
+        }
+        
+        const gstRate = isAustralia ? AUSTRALIA_GST : NEWZEALAND_GST;
+        const gstRatePercent = isAustralia ? '10%' : '15%';
+        let priceExcludingGST, gstAmount, priceIncludingGST;
+        let formula;
+        
+        if (priceType === 'including') {
+            // Price includes GST - calculate backwards
+            priceIncludingGST = price;
+            priceExcludingGST = price / (1 + gstRate);
+            gstAmount = priceIncludingGST - priceExcludingGST;
+            formula = `Price Excluding GST = $${price.toFixed(2)} ÷ (1 + ${gstRate}) = $${priceExcludingGST.toFixed(2)}`;
+        } else {
+            // Price excludes GST - add GST
+            priceExcludingGST = price;
+            gstAmount = priceExcludingGST * gstRate;
+            priceIncludingGST = priceExcludingGST + gstAmount;
+            formula = `GST = $${price.toFixed(2)} × ${gstRate} = $${gstAmount.toFixed(2)}`;
+        }
+        
+        // Display results
+        document.getElementById('gst-amount').textContent = '$' + gstAmount.toFixed(2);
+        document.getElementById('gst-rate-label').textContent = isAustralia ? 'GST Rate (Australia)' : 'GST Rate (New Zealand)';
+        document.getElementById('gst-rate').textContent = gstRatePercent;
+        document.getElementById('price-excluding-display').textContent = '$' + priceExcludingGST.toFixed(2);
+        document.getElementById('gst-amount-display').textContent = '$' + gstAmount.toFixed(2);
+        document.getElementById('price-including-display').textContent = '$' + priceIncludingGST.toFixed(2);
+        document.getElementById('calculation-formula').textContent = formula;
+        
+        // Show result
+        document.getElementById('gst-result').classList.remove('hidden');
+        document.getElementById('gst-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

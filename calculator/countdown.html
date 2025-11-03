@@ -1,0 +1,456 @@
+<!-- Countdown Timer Page -->
+<!-- A countdown timer tool using the same structure as calculators -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Timer Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Countdown Timer</h1>
+        <p class="text-gray-400 text-lg">Set a time and count down to zero with alerts</p>
+    </div>
+
+    <!-- Timer Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Time Display -->
+        <div class="text-center mb-8">
+            <div id="countdown-display-container" class="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-8 md:p-12 border border-slate-600/30 mb-6">
+                <div id="countdown-display" class="text-6xl md:text-7xl font-mono font-bold text-amber-400 mb-2">
+                    00:00:00
+                </div>
+                <div class="text-sm text-gray-400 font-mono">
+                    Hours : Minutes : Seconds
+                </div>
+            </div>
+            
+            <!-- Alert/Finished Message -->
+            <div id="finished-alert" class="hidden bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-6 mb-6 animate-pulse">
+                <div class="text-2xl font-bold text-white mb-2">⏰ Time's Up!</div>
+                <p class="text-white/90">The countdown has reached zero</p>
+            </div>
+        </div>
+
+        <!-- Time Input Section -->
+        <div id="time-input-section" class="mb-8">
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <!-- Hours Input -->
+                <div>
+                    <label for="hours-input" class="block text-sm font-medium text-gray-300 mb-2 text-center">
+                        Hours
+                    </label>
+                    <input 
+                        type="number" 
+                        id="hours-input" 
+                        min="0"
+                        max="99"
+                        value="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-center font-mono text-2xl">
+                </div>
+
+                <!-- Minutes Input -->
+                <div>
+                    <label for="minutes-input" class="block text-sm font-medium text-gray-300 mb-2 text-center">
+                        Minutes
+                    </label>
+                    <input 
+                        type="number" 
+                        id="minutes-input" 
+                        min="0"
+                        max="59"
+                        value="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-center font-mono text-2xl">
+                </div>
+
+                <!-- Seconds Input -->
+                <div>
+                    <label for="seconds-input" class="block text-sm font-medium text-gray-300 mb-2 text-center">
+                        Seconds
+                    </label>
+                    <input 
+                        type="number" 
+                        id="seconds-input" 
+                        min="0"
+                        max="59"
+                        value="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-center font-mono text-2xl">
+                </div>
+            </div>
+
+            <!-- Quick Preset Buttons -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2 text-center">Quick Presets:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" onclick="setTime(0, 0, 30)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">30s</button>
+                    <button type="button" onclick="setTime(0, 1, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1min</button>
+                    <button type="button" onclick="setTime(0, 5, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">5min</button>
+                    <button type="button" onclick="setTime(0, 10, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">10min</button>
+                    <button type="button" onclick="setTime(0, 15, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">15min</button>
+                    <button type="button" onclick="setTime(0, 30, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">30min</button>
+                    <button type="button" onclick="setTime(1, 0, 0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1hr</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <button 
+                id="start-btn"
+                onclick="startCountdown()"
+                class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg font-semibold text-white hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Start
+            </button>
+            
+            <button 
+                id="pause-btn"
+                onclick="pauseCountdown()"
+                class="px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold text-white hover:from-yellow-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl flex items-center hidden">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Pause
+            </button>
+            
+            <button 
+                onclick="resetCountdown()"
+                class="px-6 py-3 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-lg font-semibold text-gray-300 hover:text-white transition-all shadow-md hover:shadow-lg flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                How to Use
+            </h3>
+            <div class="space-y-3 text-gray-300">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Setting Time</p>
+                        <p class="text-xs text-gray-400">
+                            Enter hours, minutes, and seconds using the input fields, or use the quick preset buttons for common durations.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Start/Pause</p>
+                        <p class="text-xs text-gray-400">
+                            Click <strong>Start</strong> to begin the countdown. Click <strong>Pause</strong> to temporarily stop without resetting.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Reset</p>
+                        <p class="text-xs text-gray-400">
+                            Click <strong>Reset</strong> to stop the timer and return to the input screen.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Alerts</p>
+                        <p class="text-xs text-gray-400">
+                            When the timer reaches zero, a visual alert will appear and a sound will play (if enabled).
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-amber-400 mb-2">Keyboard Shortcuts</p>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li>• <strong>Spacebar:</strong> Start/Pause toggle</li>
+                        <li>• <strong>R key:</strong> Reset timer</li>
+                        <li>• <strong>Arrow keys:</strong> Navigate between input fields</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Countdown Timer -->
+<script>
+    let remainingTime = 0; // in milliseconds
+    let countdownInterval = null;
+    let isRunning = false;
+    let audioContext = null;
+    
+    function setTime(hours, minutes, seconds) {
+        if (!isRunning) {
+            document.getElementById('hours-input').value = hours;
+            document.getElementById('minutes-input').value = minutes;
+            document.getElementById('seconds-input').value = seconds;
+            updateDisplayFromInputs();
+            resetButtons();
+        }
+    }
+    
+    function getTimeFromInputs() {
+        const hours = parseInt(document.getElementById('hours-input').value) || 0;
+        const minutes = parseInt(document.getElementById('minutes-input').value) || 0;
+        const seconds = parseInt(document.getElementById('seconds-input').value) || 0;
+        
+        // Normalize time (e.g., 90 seconds becomes 1:30)
+        let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        
+        return {
+            hours: Math.floor(totalSeconds / 3600),
+            minutes: Math.floor((totalSeconds % 3600) / 60),
+            seconds: totalSeconds % 60,
+            totalMs: totalSeconds * 1000
+        };
+    }
+    
+    function updateDisplayFromInputs() {
+        const time = getTimeFromInputs();
+        remainingTime = time.totalMs;
+        updateDisplay();
+    }
+    
+    function formatTime(milliseconds) {
+        if (milliseconds <= 0) {
+            return {
+                hours: '00',
+                minutes: '00',
+                seconds: '00',
+                display: '00:00:00'
+            };
+        }
+        
+        const totalSeconds = Math.ceil(milliseconds / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        
+        return {
+            hours: hours.toString().padStart(2, '0'),
+            minutes: minutes.toString().padStart(2, '0'),
+            seconds: seconds.toString().padStart(2, '0'),
+            display: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        };
+    }
+    
+    function updateDisplay() {
+        const time = formatTime(remainingTime);
+        const display = document.getElementById('countdown-display');
+        const container = document.getElementById('countdown-display-container');
+        
+        display.textContent = time.display;
+        
+        // Change color when time is running low
+        if (remainingTime <= 10000 && remainingTime > 0) {
+            display.classList.remove('text-amber-400');
+            display.classList.add('text-red-400');
+            container.classList.add('animate-pulse');
+        } else if (remainingTime > 10000) {
+            display.classList.remove('text-red-400');
+            display.classList.add('text-amber-400');
+            container.classList.remove('animate-pulse');
+        }
+    }
+    
+    function startCountdown() {
+        if (!isRunning) {
+            // Get time from inputs if starting fresh
+            if (remainingTime === 0) {
+                updateDisplayFromInputs();
+            }
+            
+            if (remainingTime <= 0) {
+                alert('Please set a time greater than zero.');
+                return;
+            }
+            
+            // Hide input section when running
+            document.getElementById('time-input-section').classList.add('hidden');
+            document.getElementById('finished-alert').classList.add('hidden');
+            
+            countdownInterval = setInterval(() => {
+                remainingTime -= 100;
+                
+                if (remainingTime <= 0) {
+                    remainingTime = 0;
+                    updateDisplay();
+                    finishCountdown();
+                    return;
+                }
+                
+                updateDisplay();
+            }, 100); // Update every 100ms
+            
+            isRunning = true;
+            
+            // Update button visibility
+            document.getElementById('start-btn').classList.add('hidden');
+            document.getElementById('pause-btn').classList.remove('hidden');
+        }
+    }
+    
+    function pauseCountdown() {
+        if (isRunning) {
+            clearInterval(countdownInterval);
+            isRunning = false;
+            
+            // Update button visibility
+            document.getElementById('start-btn').classList.remove('hidden');
+            document.getElementById('pause-btn').classList.add('hidden');
+        }
+    }
+    
+    function resetCountdown() {
+        clearInterval(countdownInterval);
+        isRunning = false;
+        remainingTime = 0;
+        
+        // Show input section
+        document.getElementById('time-input-section').classList.remove('hidden');
+        document.getElementById('finished-alert').classList.add('hidden');
+        
+        resetButtons();
+        updateDisplayFromInputs();
+    }
+    
+    function resetButtons() {
+        document.getElementById('start-btn').classList.remove('hidden');
+        document.getElementById('pause-btn').classList.add('hidden');
+    }
+    
+    function finishCountdown() {
+        clearInterval(countdownInterval);
+        isRunning = false;
+        
+        // Show finished alert
+        document.getElementById('finished-alert').classList.remove('hidden');
+        
+        // Play sound
+        playAlertSound();
+        
+        // Reset buttons
+        resetButtons();
+        
+        // Scroll to alert
+        document.getElementById('finished-alert').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    function playAlertSound() {
+        try {
+            // Create audio context if it doesn't exist
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Create a simple beep sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800; // 800 Hz tone
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+            
+            // Play 3 beeps
+            setTimeout(() => {
+                const osc2 = audioContext.createOscillator();
+                const gain2 = audioContext.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioContext.destination);
+                osc2.frequency.value = 800;
+                osc2.type = 'sine';
+                gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                osc2.start(audioContext.currentTime);
+                osc2.stop(audioContext.currentTime + 0.5);
+            }, 600);
+            
+            setTimeout(() => {
+                const osc3 = audioContext.createOscillator();
+                const gain3 = audioContext.createGain();
+                osc3.connect(gain3);
+                gain3.connect(audioContext.destination);
+                osc3.frequency.value = 800;
+                osc3.type = 'sine';
+                gain3.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                osc3.start(audioContext.currentTime);
+                osc3.stop(audioContext.currentTime + 0.5);
+            }, 1200);
+        } catch (error) {
+            console.log('Audio not supported');
+        }
+    }
+    
+    // Update display when inputs change (only when not running)
+    ['hours-input', 'minutes-input', 'seconds-input'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            if (!isRunning) {
+                // Normalize minutes and seconds
+                let minutes = parseInt(document.getElementById('minutes-input').value) || 0;
+                let seconds = parseInt(document.getElementById('seconds-input').value) || 0;
+                
+                if (seconds >= 60) {
+                    minutes += Math.floor(seconds / 60);
+                    seconds = seconds % 60;
+                    document.getElementById('minutes-input').value = minutes;
+                    document.getElementById('seconds-input').value = seconds;
+                }
+                
+                if (minutes >= 60) {
+                    const hours = parseInt(document.getElementById('hours-input').value) || 0;
+                    document.getElementById('hours-input').value = hours + Math.floor(minutes / 60);
+                    document.getElementById('minutes-input').value = minutes % 60;
+                }
+                
+                updateDisplayFromInputs();
+            }
+        });
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') {
+            event.preventDefault();
+            if (isRunning) {
+                pauseCountdown();
+            } else {
+                startCountdown();
+            }
+        } else if (event.code === 'KeyR') {
+            resetCountdown();
+        }
+    });
+    
+    // Initialize display
+    updateDisplayFromInputs();
+</script>
+

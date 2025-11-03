@@ -1,0 +1,312 @@
+<!-- Pythagorean Theorem Calculator Page -->
+<!-- This combines the base calculator template with the Pythagorean calculator component -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Pythagorean Theorem</h1>
+        <p class="text-gray-400 text-lg">Calculate the length of any side in a right triangle</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Pythagorean Calculator Form -->
+        <form id="pythagorean-form" class="space-y-6" onsubmit="calculatePythagorean(event)">
+            <div class="mb-6">
+                <p class="text-sm text-gray-400 mb-4">
+                    Enter values for any two sides to calculate the third. Leave the value you want to calculate empty.
+                </p>
+            </div>
+
+            <!-- Side A (Adjacent) -->
+            <div>
+                <label for="side-a" class="block text-sm font-medium text-gray-300 mb-2">
+                    Side A (Adjacent)
+                </label>
+                <input 
+                    type="number" 
+                    id="side-a" 
+                    name="side-a"
+                    step="0.01"
+                    min="0"
+                    placeholder="Enter length of side A"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Leave empty to calculate</p>
+            </div>
+
+            <!-- Side B (Opposite) -->
+            <div>
+                <label for="side-b" class="block text-sm font-medium text-gray-300 mb-2">
+                    Side B (Opposite)
+                </label>
+                <input 
+                    type="number" 
+                    id="side-b" 
+                    name="side-b"
+                    step="0.01"
+                    min="0"
+                    placeholder="Enter length of side B"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Leave empty to calculate</p>
+            </div>
+
+            <!-- Side C (Hypotenuse) -->
+            <div>
+                <label for="side-c" class="block text-sm font-medium text-gray-300 mb-2">
+                    Side C (Hypotenuse)
+                </label>
+                <input 
+                    type="number" 
+                    id="side-c" 
+                    name="side-c"
+                    step="0.01"
+                    min="0"
+                    placeholder="Enter length of hypotenuse"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Leave empty to calculate</p>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg font-semibold text-white hover:from-green-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="pythagorean-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="text-center">
+                    <p class="text-sm text-gray-400 mb-2">Calculated Result</p>
+                    <p id="result-label" class="text-lg font-semibold text-green-400 mb-3"></p>
+                    <p id="result-value" class="text-4xl font-bold mb-4"></p>
+                    <div id="result-formula" class="text-sm text-gray-400 font-mono bg-slate-900/50 rounded p-3 inline-block"></div>
+                </div>
+            </div>
+            
+            <!-- Triangle Visualization -->
+            <div class="mt-6 flex justify-center">
+                <div id="triangle-visual" class="bg-slate-900/30 rounded-lg p-6 border border-slate-600/30">
+                    <!-- SVG triangle will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About the Pythagorean Theorem
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    The Pythagorean Theorem states that in a right triangle, the square of the hypotenuse (the side opposite the right angle) 
+                    equals the sum of squares of the other two sides.
+                </p>
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                    <p class="text-lg">a² + b² = c²</p>
+                    <p class="text-sm text-gray-400">where c is the hypotenuse</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-green-400 mb-2">Calculate Hypotenuse</p>
+                        <p class="text-xs text-gray-400">c = √(a² + b²)</p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-green-400 mb-2">Calculate Side A</p>
+                        <p class="text-xs text-gray-400">a = √(c² - b²)</p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-green-400 mb-2">Calculate Side B</p>
+                        <p class="text-xs text-gray-400">b = √(c² - a²)</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">
+                    <strong class="text-gray-300">Note:</strong> The Pythagorean Theorem only applies to right triangles (triangles with a 90° angle). 
+                    Make sure you have a right triangle before using this calculator.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Pythagorean Calculation -->
+<script>
+    function calculatePythagorean(event) {
+        event.preventDefault();
+        
+        // Get input values
+        const sideA = parseFloat(document.getElementById('side-a').value);
+        const sideB = parseFloat(document.getElementById('side-b').value);
+        const sideC = parseFloat(document.getElementById('side-c').value);
+        
+        // Count how many values are provided
+        const valuesProvided = [sideA, sideB, sideC].filter(val => val !== undefined && !isNaN(val) && val > 0).length;
+        
+        if (valuesProvided < 2) {
+            alert('Please enter values for at least two sides');
+            return;
+        }
+        
+        if (valuesProvided === 3) {
+            // Verify if it's a valid right triangle
+            const a = sideA || 0;
+            const b = sideB || 0;
+            const c = sideC || 0;
+            
+            // Find the largest value (should be hypotenuse)
+            const sides = [a, b, c].sort((x, y) => y - x);
+            const maxSide = sides[0];
+            const otherSides = [sides[1], sides[2]];
+            
+            const sumOfSquares = otherSides[0] * otherSides[0] + otherSides[1] * otherSides[1];
+            const maxSquare = maxSide * maxSide;
+            
+            // Check if it satisfies Pythagorean theorem (with small tolerance for floating point)
+            if (Math.abs(sumOfSquares - maxSquare) > 0.01) {
+                alert('The values do not form a valid right triangle according to the Pythagorean Theorem');
+                return;
+            } else {
+                alert('This is a valid right triangle! ✓');
+            }
+        }
+        
+        let result, resultLabel, formula;
+        
+        // Calculate the missing side
+        if (!sideA || isNaN(sideA) || sideA <= 0) {
+            // Calculate side A: a = √(c² - b²)
+            if (!sideC || !sideB) {
+                alert('Cannot calculate Side A: Need both Side B and Hypotenuse C');
+                return;
+            }
+            if (sideB >= sideC) {
+                alert('Side B must be less than Hypotenuse C');
+                return;
+            }
+            result = Math.sqrt(sideC * sideC - sideB * sideB);
+            resultLabel = 'Side A (Adjacent)';
+            formula = `a = √(c² - b²) = √(${sideC}² - ${sideB}²) = ${result.toFixed(4)}`;
+            document.getElementById('side-a').value = result.toFixed(4);
+        } else if (!sideB || isNaN(sideB) || sideB <= 0) {
+            // Calculate side B: b = √(c² - a²)
+            if (!sideC || !sideA) {
+                alert('Cannot calculate Side B: Need both Side A and Hypotenuse C');
+                return;
+            }
+            if (sideA >= sideC) {
+                alert('Side A must be less than Hypotenuse C');
+                return;
+            }
+            result = Math.sqrt(sideC * sideC - sideA * sideA);
+            resultLabel = 'Side B (Opposite)';
+            formula = `b = √(c² - a²) = √(${sideC}² - ${sideA}²) = ${result.toFixed(4)}`;
+            document.getElementById('side-b').value = result.toFixed(4);
+        } else if (!sideC || isNaN(sideC) || sideC <= 0) {
+            // Calculate hypotenuse: c = √(a² + b²)
+            if (!sideA || !sideB) {
+                alert('Cannot calculate Hypotenuse: Need both Side A and Side B');
+                return;
+            }
+            result = Math.sqrt(sideA * sideA + sideB * sideB);
+            resultLabel = 'Side C (Hypotenuse)';
+            formula = `c = √(a² + b²) = √(${sideA}² + ${sideB}²) = ${result.toFixed(4)}`;
+            document.getElementById('side-c').value = result.toFixed(4);
+        } else {
+            // All sides provided - already validated above
+            alert('All sides provided. This is a valid right triangle!');
+            return;
+        }
+        
+        // Display result
+        document.getElementById('result-label').textContent = resultLabel;
+        document.getElementById('result-value').textContent = result.toFixed(4);
+        document.getElementById('result-formula').textContent = formula;
+        
+        // Draw triangle visualization
+        drawTriangle(sideA || result, sideB || result, sideC || result);
+        
+        // Show result
+        document.getElementById('pythagorean-result').classList.remove('hidden');
+        document.getElementById('pythagorean-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    function drawTriangle(a, b, c) {
+        // Determine which is the hypotenuse
+        const sides = [{val: a, label: 'a'}, {val: b, label: 'b'}, {val: c, label: 'c'}];
+        sides.sort((x, y) => y.val - x.val);
+        const hypotenuse = sides[0];
+        const leg1 = sides[1];
+        const leg2 = sides[2];
+        
+        // Scale for visualization (fit in 200x200 viewBox)
+        const scale = 150 / Math.max(a, b, c);
+        const scaledA = (a === leg1.val ? leg1.val : (a === leg2.val ? leg2.val : a)) * scale;
+        const scaledB = (b === leg1.val ? leg1.val : (b === leg2.val ? leg2.val : b)) * scale;
+        const scaledC = hypotenuse.val * scale;
+        
+        // Position triangle (right angle at origin)
+        const x1 = 20;
+        const y1 = 20;
+        const x2 = x1 + scaledA;
+        const y2 = y1;
+        const x3 = x1;
+        const y3 = y1 + scaledB;
+        
+        // Create SVG
+        const svg = `
+            <svg width="220" height="220" viewBox="0 0 220 220" class="w-full max-w-xs">
+                <!-- Triangle -->
+                <polygon 
+                    points="${x1},${y1} ${x2},${y2} ${x3},${y3}" 
+                    fill="none" 
+                    stroke="#10b981" 
+                    stroke-width="3"
+                    opacity="0.7"/>
+                
+                <!-- Right angle indicator -->
+                <path 
+                    d="M ${x1} ${y1} L ${x1 + 15} ${y1} L ${x1} ${y1 + 15} Z" 
+                    fill="#10b981" 
+                    opacity="0.5"/>
+                
+                <!-- Side labels -->
+                <text x="${(x1 + x2) / 2}" y="${y1 - 10}" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">${sides.find(s => s.val === a)?.label || 'a'}</text>
+                <text x="${x3 - 15}" y="${(y1 + y3) / 2}" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">${sides.find(s => s.val === b)?.label || 'b'}</text>
+                <text x="${(x2 + x3) / 2 + 5}" y="${(y2 + y3) / 2}" fill="#10b981" font-size="14" font-weight="bold">${hypotenuse.label}</text>
+                
+                <!-- Side lengths -->
+                <text x="${(x1 + x2) / 2}" y="${y1 - 25}" fill="#6ee7b7" font-size="12" text-anchor="middle">${a.toFixed(2)}</text>
+                <text x="${x3 - 30}" y="${(y1 + y3) / 2}" fill="#6ee7b7" font-size="12" text-anchor="middle">${b.toFixed(2)}</text>
+                <text x="${(x2 + x3) / 2 + 10}" y="${(y2 + y3) / 2 + 15}" fill="#6ee7b7" font-size="12">${c.toFixed(2)}</text>
+            </svg>
+        `;
+        
+        document.getElementById('triangle-visual').innerHTML = svg;
+    }
+</script>
+

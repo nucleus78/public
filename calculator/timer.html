@@ -1,0 +1,283 @@
+<!-- Timer Page -->
+<!-- A stopwatch/timer tool using the same structure as calculators -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Timer Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Stopwatch Timer</h1>
+        <p class="text-gray-400 text-lg">Track time with precision - start, pause, and record lap times</p>
+    </div>
+
+    <!-- Timer Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Time Display -->
+        <div class="text-center mb-8">
+            <div class="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-8 md:p-12 border border-slate-600/30 mb-6">
+                <div id="time-display" class="text-6xl md:text-7xl font-mono font-bold text-violet-400 mb-2">
+                    00:00:00.00
+                </div>
+                <div class="text-sm text-gray-400 font-mono">
+                    Hours : Minutes : Seconds . Centiseconds
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button 
+                id="start-btn"
+                onclick="startTimer()"
+                class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg font-semibold text-white hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Start
+            </button>
+            
+            <button 
+                id="pause-btn"
+                onclick="pauseTimer()"
+                class="px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold text-white hover:from-yellow-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl flex items-center hidden">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Pause
+            </button>
+            
+            <button 
+                onclick="recordLap()"
+                id="lap-btn"
+                class="px-6 py-3 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-lg font-semibold text-gray-300 hover:text-white transition-all shadow-md hover:shadow-lg flex items-center hidden">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Lap
+            </button>
+            
+            <button 
+                onclick="resetTimer()"
+                class="px-6 py-3 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-lg font-semibold text-gray-300 hover:text-white transition-all shadow-md hover:shadow-lg flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Reset
+            </button>
+        </div>
+
+        <!-- Lap Times Display -->
+        <div id="lap-times-container" class="hidden">
+            <div class="border-t border-slate-600/50 pt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-300">Lap Times</h3>
+                    <button 
+                        onclick="clearLaps()"
+                        class="text-xs text-gray-400 hover:text-red-400 transition-colors">
+                        Clear All
+                    </button>
+                </div>
+                <div id="lap-times-list" class="space-y-2 max-h-64 overflow-y-auto">
+                    <!-- Lap times will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                How to Use
+            </h3>
+            <div class="space-y-3 text-gray-300">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Start/Pause</p>
+                        <p class="text-xs text-gray-400">
+                            Click <strong>Start</strong> to begin timing. Click <strong>Pause</strong> to temporarily stop the timer without resetting.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Lap Times</p>
+                        <p class="text-xs text-gray-400">
+                            While running, click <strong>Lap</strong> to record the current time without stopping the timer.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Reset</p>
+                        <p class="text-xs text-gray-400">
+                            Click <strong>Reset</strong> to clear the timer and all lap times back to zero.
+                        </p>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Precision</p>
+                        <p class="text-xs text-gray-400">
+                            Timer displays time with centisecond (0.01s) precision for accurate measurements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Timer Functionality -->
+<script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+    let isRunning = false;
+    let lapCount = 0;
+    
+    function formatTime(milliseconds) {
+        const totalCentiseconds = Math.floor(milliseconds / 10);
+        const hours = Math.floor(milliseconds / 3600000);
+        const minutes = Math.floor((milliseconds % 3600000) / 60000);
+        const seconds = Math.floor((milliseconds % 60000) / 1000);
+        const centiseconds = totalCentiseconds % 100;
+        
+        return {
+            hours: hours.toString().padStart(2, '0'),
+            minutes: minutes.toString().padStart(2, '0'),
+            seconds: seconds.toString().padStart(2, '0'),
+            centiseconds: centiseconds.toString().padStart(2, '0'),
+            display: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`
+        };
+    }
+    
+    function updateDisplay() {
+        const time = formatTime(elapsedTime);
+        document.getElementById('time-display').textContent = time.display;
+    }
+    
+    function startTimer() {
+        if (!isRunning) {
+            startTime = Date.now() - elapsedTime;
+            timerInterval = setInterval(() => {
+                elapsedTime = Date.now() - startTime;
+                updateDisplay();
+            }, 10); // Update every 10ms (centisecond precision)
+            
+            isRunning = true;
+            
+            // Update button visibility
+            document.getElementById('start-btn').classList.add('hidden');
+            document.getElementById('pause-btn').classList.remove('hidden');
+            document.getElementById('lap-btn').classList.remove('hidden');
+        }
+    }
+    
+    function pauseTimer() {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            isRunning = false;
+            
+            // Update button visibility
+            document.getElementById('start-btn').classList.remove('hidden');
+            document.getElementById('pause-btn').classList.add('hidden');
+            document.getElementById('lap-btn').classList.add('hidden');
+        }
+    }
+    
+    function resetTimer() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        elapsedTime = 0;
+        startTime = 0;
+        lapCount = 0;
+        
+        updateDisplay();
+        
+        // Update button visibility
+        document.getElementById('start-btn').classList.remove('hidden');
+        document.getElementById('pause-btn').classList.add('hidden');
+        document.getElementById('lap-btn').classList.add('hidden');
+        
+        // Clear lap times
+        document.getElementById('lap-times-list').innerHTML = '';
+        document.getElementById('lap-times-container').classList.add('hidden');
+    }
+    
+    function recordLap() {
+        if (isRunning && elapsedTime > 0) {
+            lapCount++;
+            const lapTime = formatTime(elapsedTime);
+            const lapElement = document.createElement('div');
+            
+            // Calculate time since last lap (for split times)
+            const lapTimesList = document.getElementById('lap-times-list');
+            const previousLaps = lapTimesList.children;
+            let splitTime = elapsedTime;
+            
+            if (previousLaps.length > 0) {
+                const lastLapTime = previousLaps[previousLaps.length - 1].dataset.totalTime;
+                splitTime = elapsedTime - parseInt(lastLapTime);
+            }
+            
+            const split = formatTime(splitTime);
+            
+            lapElement.className = 'flex justify-between items-center p-3 bg-slate-700/30 rounded-lg border border-slate-600/30';
+            lapElement.dataset.totalTime = elapsedTime;
+            lapElement.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <span class="text-violet-400 font-semibold text-sm w-8">Lap ${lapCount}</span>
+                    <div>
+                        <span class="text-white font-mono text-sm">${lapTime.display}</span>
+                        ${previousLaps.length > 0 ? `<span class="text-gray-400 text-xs ml-2">(+${split.display})</span>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            lapTimesList.insertBefore(lapElement, lapTimesList.firstChild);
+            document.getElementById('lap-times-container').classList.remove('hidden');
+        }
+    }
+    
+    function clearLaps() {
+        document.getElementById('lap-times-list').innerHTML = '';
+        document.getElementById('lap-times-container').classList.add('hidden');
+        lapCount = 0;
+    }
+    
+    // Initialize display
+    updateDisplay();
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') {
+            event.preventDefault();
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        } else if (event.code === 'KeyL' && isRunning) {
+            recordLap();
+        } else if (event.code === 'KeyR') {
+            resetTimer();
+        }
+    });
+</script>
+

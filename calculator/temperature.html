@@ -1,0 +1,253 @@
+<!-- Temperature Converter Page -->
+<!-- Convert between Celsius and Fahrenheit -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Temperature Converter</h1>
+        <p class="text-gray-400 text-lg">Convert between Celsius (°C) and Fahrenheit (°F)</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Temperature Converter Form -->
+        <form id="temperature-form" class="space-y-6" onsubmit="convertTemperature(event)">
+            <!-- Temperature Input -->
+            <div>
+                <label for="temperature-input" class="block text-sm font-medium text-gray-300 mb-2">
+                    Temperature
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="temperature-input" 
+                        name="temperature-input"
+                        step="0.1"
+                        placeholder="0"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-lg">
+                    <select 
+                        id="temperature-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                        <option value="celsius">Celsius (°C)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Conversion Direction Display -->
+            <div class="flex justify-center">
+                <div class="text-2xl font-bold text-gray-400">↓</div>
+            </div>
+
+            <!-- Result Display -->
+            <div class="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/30">
+                <div class="text-center">
+                    <p class="text-sm text-gray-400 mb-2">Converted Temperature</p>
+                    <p class="text-5xl font-bold text-red-400 mb-2" id="converted-temperature">—</p>
+                    <p class="text-lg text-gray-300 font-mono" id="converted-unit"></p>
+                </div>
+            </div>
+
+            <!-- Quick Examples -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2 text-center">Quick Examples:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" onclick="setTemperature(0, 'celsius')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">0°C</button>
+                    <button type="button" onclick="setTemperature(25, 'celsius')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">25°C</button>
+                    <button type="button" onclick="setTemperature(100, 'celsius')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">100°C</button>
+                    <button type="button" onclick="setTemperature(32, 'fahrenheit')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">32°F</button>
+                    <button type="button" onclick="setTemperature(98.6, 'fahrenheit')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">98.6°F</button>
+                    <button type="button" onclick="setTemperature(212, 'fahrenheit')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">212°F</button>
+                    <button type="button" onclick="setTemperature(-40, 'celsius')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">-40° (same)</button>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg font-semibold text-white hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl">
+                Convert Temperature
+            </button>
+        </form>
+
+        <!-- Reference Table -->
+        <div class="mt-8 pt-6 border-t border-slate-600/50">
+            <h4 class="text-sm font-semibold text-gray-300 mb-4 text-center">Temperature Reference</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                    <p class="text-xs font-semibold text-red-400 mb-2 text-center">Common Celsius Values</p>
+                    <div class="space-y-1 text-xs text-gray-400">
+                        <div class="flex justify-between">
+                            <span>Water Freezes</span>
+                            <span class="text-gray-300">0°C = 32°F</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Room Temperature</span>
+                            <span class="text-gray-300">20°C = 68°F</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Body Temperature</span>
+                            <span class="text-gray-300">37°C = 98.6°F</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Water Boils</span>
+                            <span class="text-gray-300">100°C = 212°F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                    <p class="text-xs font-semibold text-red-400 mb-2 text-center">Common Fahrenheit Values</p>
+                    <div class="space-y-1 text-xs text-gray-400">
+                        <div class="flex justify-between">
+                            <span>Water Freezes</span>
+                            <span class="text-gray-300">32°F = 0°C</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Room Temperature</span>
+                            <span class="text-gray-300">68°F = 20°C</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Body Temperature</span>
+                            <span class="text-gray-300">98.6°F = 37°C</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Water Boils</span>
+                            <span class="text-gray-300">212°F = 100°C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Temperature Conversion
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Celsius and Fahrenheit are two common temperature scales. Celsius is used in most countries, 
+                    while Fahrenheit is primarily used in the United States.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg text-red-300">°F = (°C × 9/5) + 32</p>
+                        <p class="text-sm text-gray-400">Celsius to Fahrenheit</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg text-red-300">°C = (°F - 32) × 5/9</p>
+                        <p class="text-sm text-gray-400">Fahrenheit to Celsius</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-red-400 mb-2">Celsius (°C)</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Used in most countries worldwide</li>
+                            <li>• Water freezes at 0°C</li>
+                            <li>• Water boils at 100°C</li>
+                            <li>• Named after Anders Celsius</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-red-400 mb-2">Fahrenheit (°F)</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Primarily used in the United States</li>
+                            <li>• Water freezes at 32°F</li>
+                            <li>• Water boils at 212°F</li>
+                            <li>• Named after Daniel Fahrenheit</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-red-400 mb-2">Fun Fact</p>
+                    <p class="text-xs text-gray-400">
+                        -40°C and -40°F are the same temperature! This is the only point where both scales have the same value.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Temperature Converter -->
+<script>
+    function setTemperature(value, unit) {
+        document.getElementById('temperature-input').value = value;
+        document.getElementById('temperature-unit').value = unit;
+        convertTemperature(new Event('submit'));
+    }
+    
+    function convertTemperature(event) {
+        event.preventDefault();
+        
+        const temperature = parseFloat(document.getElementById('temperature-input').value);
+        const unit = document.getElementById('temperature-unit').value;
+        
+        if (isNaN(temperature)) {
+            document.getElementById('converted-temperature').textContent = '—';
+            document.getElementById('converted-unit').textContent = 'Enter a temperature';
+            return;
+        }
+        
+        let convertedTemp;
+        let convertedUnit;
+        let originalDisplay;
+        
+        if (unit === 'celsius') {
+            // Convert Celsius to Fahrenheit: F = (C × 9/5) + 32
+            convertedTemp = (temperature * 9/5) + 32;
+            convertedUnit = 'Fahrenheit (°F)';
+            originalDisplay = `${temperature}°C = ${convertedTemp.toFixed(1)}°F`;
+        } else {
+            // Convert Fahrenheit to Celsius: C = (F - 32) × 5/9
+            convertedTemp = (temperature - 32) * 5/9;
+            convertedUnit = 'Celsius (°C)';
+            originalDisplay = `${temperature}°F = ${convertedTemp.toFixed(1)}°C`;
+        }
+        
+        // Display result
+        document.getElementById('converted-temperature').textContent = convertedTemp.toFixed(1) + '°';
+        document.getElementById('converted-unit').textContent = convertedUnit;
+    }
+    
+    // Convert on input change for real-time conversion
+    document.getElementById('temperature-input').addEventListener('input', function() {
+        convertTemperature(new Event('submit'));
+    });
+    
+    document.getElementById('temperature-unit').addEventListener('change', function() {
+        convertTemperature(new Event('submit'));
+    });
+    
+    // Initial conversion if there's a default value
+    convertTemperature(new Event('submit'));
+</script>
+

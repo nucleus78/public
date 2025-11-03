@@ -1,0 +1,555 @@
+<!-- Home content fragment - calculator list -->
+<!-- Calculators Section -->
+<section id="calculators" class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+        <h3 class="text-3xl sm:text-4xl font-bold mb-4">Our Calculators</h3>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+            Browse our collection of specialized formula calculators
+        </p>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="mb-8 space-y-4">
+        <!-- Search Input -->
+        <div class="relative max-w-2xl mx-auto">
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input 
+                type="text" 
+                id="search-input"
+                placeholder="Search calculators..."
+                class="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                oninput="filterCalculators()">
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex flex-wrap justify-center gap-3">
+            <button 
+                onclick="filterByCategory('all')"
+                data-category="all"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-sm">
+                All
+            </button>
+            <button 
+                onclick="filterByCategory('Math')"
+                data-category="Math"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Math
+            </button>
+            <button 
+                onclick="filterByCategory('Geometry')"
+                data-category="Geometry"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Geometry
+            </button>
+            <button 
+                onclick="filterByCategory('Physics')"
+                data-category="Physics"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Physics
+            </button>
+            <button 
+                onclick="filterByCategory('Chemistry')"
+                data-category="Chemistry"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Chemistry
+            </button>
+            <button 
+                onclick="filterByCategory('Finance')"
+                data-category="Finance"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Finance
+            </button>
+            <button 
+                onclick="filterByCategory('Tax')"
+                data-category="Tax"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Tax
+            </button>
+            <button 
+                onclick="filterByCategory('Health')"
+                data-category="Health"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Health
+            </button>
+            <button 
+                onclick="filterByCategory('Construction')"
+                data-category="Construction"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Construction
+            </button>
+            <button 
+                onclick="filterByCategory('Tools')"
+                data-category="Tools"
+                class="category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50">
+                Tools
+            </button>
+        </div>
+
+        <!-- Results Count -->
+        <div id="results-count" class="text-center text-sm text-gray-400">
+            <span id="count-number"></span> calculator<span id="count-plural"></span> found
+        </div>
+    </div>
+    
+    <!-- Calculator Cards Grid -->
+    <div id="calculator-cards" 
+         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Example Calculator Cards - Replace with HTMX-loaded content -->
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Math"
+             data-title="Quadratic Formula"
+             data-description="Solve quadratic equations using the standard formula"
+             hx-get="calculator/quadratic.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Quadratic Formula</h4>
+            <p class="text-gray-400 text-sm mb-4">Solve quadratic equations using the standard formula</p>
+            <span class="inline-block px-3 py-1 bg-purple-900/30 text-purple-300 rounded-full text-xs">Math</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Geometry"
+             data-title="Pythagorean Theorem"
+             data-description="Calculate the length of sides in right triangles"
+             hx-get="calculator/pythagorean.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Pythagorean Theorem</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate the length of sides in right triangles</p>
+            <span class="inline-block px-3 py-1 bg-green-900/30 text-green-300 rounded-full text-xs">Geometry</span>
+        </div>
+
+        <!-- Example Calculator Cards - Replace with HTMX-loaded content -->
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Physics"
+             data-title="Kinetic Energy"
+             data-description="Calculate the kinetic energy of moving objects"
+             hx-get="calculator/kinetic-energy.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Kinetic Energy</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate the kinetic energy of moving objects</p>
+            <span class="inline-block px-3 py-1 bg-yellow-900/30 text-yellow-300 rounded-full text-xs">Physics</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Chemistry"
+             data-title="Molar Mass"
+             data-description="Calculate the molar mass of chemical compounds"
+             hx-get="calculator/molar-mass.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Molar Mass</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate the molar mass of chemical compounds</p>
+            <span class="inline-block px-3 py-1 bg-pink-900/30 text-pink-300 rounded-full text-xs">Chemistry</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Health"
+             data-title="BMI Calculator"
+             data-description="Calculate your Body Mass Index"
+             hx-get="calculator/bmi.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">BMI Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate your Body Mass Index</p>
+            <span class="inline-block px-3 py-1 bg-cyan-900/30 text-cyan-300 rounded-full text-xs">Health</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Finance"
+             data-title="Compound Interest"
+             data-description="Calculate compound interest with growth visualization"
+             hx-get="calculator/compound-interest.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Compound Interest</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate compound interest with growth visualization</p>
+            <span class="inline-block px-3 py-1 bg-indigo-900/30 text-indigo-300 rounded-full text-xs">Finance</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Finance"
+             data-title="Mortgage Calculator"
+             data-description="Calculate monthly payments, total interest, and see your amortization schedule"
+             hx-get="calculator/mortgage.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Mortgage Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate monthly payments, total interest, and see your amortization schedule</p>
+            <span class="inline-block px-3 py-1 bg-emerald-900/30 text-emerald-300 rounded-full text-xs">Finance</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tax"
+             data-title="GST Calculator"
+             data-description="Calculate GST for Australia (10%) and New Zealand (15%)"
+             hx-get="calculator/gst.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">GST Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate GST for Australia (10%) and New Zealand (15%)</p>
+            <span class="inline-block px-3 py-1 bg-emerald-900/30 text-emerald-300 rounded-full text-xs">Tax</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Concrete Volume"
+             data-description="Calculate concrete volume for slabs, columns, and more"
+             hx-get="calculator/concrete.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Concrete Volume</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate concrete volume for slabs, columns, and more</p>
+            <span class="inline-block px-3 py-1 bg-amber-900/30 text-amber-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Flooring & Tiling"
+             data-description="Calculate tiles needed based on floor area and tile size"
+             hx-get="calculator/tiling.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Flooring & Tiling</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate tiles needed based on floor area and tile size</p>
+            <span class="inline-block px-3 py-1 bg-violet-900/30 text-violet-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Finance"
+             data-title="Salary Calculator"
+             data-description="Convert salary between payment frequencies"
+             hx-get="calculator/salary.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Salary Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Convert salary between payment frequencies</p>
+            <span class="inline-block px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full text-xs">Finance</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Stopwatch Timer"
+             data-description="Track time with precision - start, pause, and record lap times"
+             hx-get="calculator/timer.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Stopwatch Timer</h4>
+            <p class="text-gray-400 text-sm mb-4">Track time with precision - start, pause, and record lap times</p>
+            <span class="inline-block px-3 py-1 bg-violet-900/30 text-violet-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Countdown Timer"
+             data-description="Set a time and count down to zero with alerts"
+             hx-get="calculator/countdown.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Countdown Timer</h4>
+            <p class="text-gray-400 text-sm mb-4">Set a time and count down to zero with alerts</p>
+            <span class="inline-block px-3 py-1 bg-amber-900/30 text-amber-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Time Calculator"
+             data-description="Add and subtract hours, minutes, and seconds"
+             hx-get="calculator/time-calculator.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Time Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Add and subtract hours, minutes, and seconds</p>
+            <span class="inline-block px-3 py-1 bg-teal-900/30 text-teal-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Date/Time Calculator"
+             data-description="Calculate hours, days, and time difference between two dates and times"
+             hx-get="calculator/datetime.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Date/Time Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate hours, days, and time difference between two dates and times</p>
+            <span class="inline-block px-3 py-1 bg-indigo-900/30 text-indigo-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Post & Rail Fence Calculator"
+             data-description="Calculate posts, rails, and pailings needed for your fence"
+             hx-get="calculator/fence.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-lime-500 to-green-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Post & Rail Fence</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate posts, rails, and pailings needed for your fence</p>
+            <span class="inline-block px-3 py-1 bg-lime-900/30 text-lime-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Brick & Block Calculator"
+             data-description="Estimate how many bricks or blocks are required for a wall, including mortar allowance"
+             hx-get="calculator/bricks.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-stone-500 to-gray-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Brick & Block Calculator</h4>
+            <p class="text-gray-400 text-sm mb-4">Estimate how many bricks or blocks are required for a wall, including mortar allowance</p>
+            <span class="inline-block px-3 py-1 bg-stone-900/30 text-stone-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Slope & Grade Calculator"
+             data-description="Determine site gradients and drainage fall"
+             hx-get="calculator/slope.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Slope & Grade</h4>
+            <p class="text-gray-400 text-sm mb-4">Determine site gradients and drainage fall</p>
+            <span class="inline-block px-3 py-1 bg-emerald-900/30 text-emerald-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Construction"
+             data-title="Paint Coverage Calculator"
+             data-description="Calculate liters of paint required for specific wall areas"
+             hx-get="calculator/paint.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Paint Coverage</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate liters of paint required for specific wall areas</p>
+            <span class="inline-block px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full text-xs">Construction</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Baking Measurement Converter"
+             data-description="Convert baking measurements (cups, tablespoons, etc.) to metric weights"
+             hx-get="calculator/baking.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Baking Converter</h4>
+            <p class="text-gray-400 text-sm mb-4">Convert baking measurements (cups, tablespoons, etc.) to metric weights</p>
+            <span class="inline-block px-3 py-1 bg-amber-900/30 text-amber-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Temperature Converter"
+             data-description="Convert between Celsius (°C) and Fahrenheit (°F)"
+             hx-get="calculator/temperature.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Temperature Converter</h4>
+            <p class="text-gray-400 text-sm mb-4">Convert between Celsius (°C) and Fahrenheit (°F)</p>
+            <span class="inline-block px-3 py-1 bg-red-900/30 text-red-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="Unit Converter"
+             data-description="Convert between metric and imperial units for length, weight, volume, area, temperature, and speed"
+             hx-get="calculator/unit-converter.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">Unit Converter</h4>
+            <p class="text-gray-400 text-sm mb-4">Convert between metric and imperial units for length, weight, volume, area, temperature, and speed</p>
+            <span class="inline-block px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full text-xs">Tools</span>
+        </div>
+
+        <div class="calculator-card bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 card-hover backdrop-blur-sm cursor-pointer"
+             data-category="Tools"
+             data-title="2-Stroke Fuel Mix Calculator"
+             data-description="Calculate the correct fuel to oil ratio for 2-stroke premix"
+             hx-get="calculator/fuel-mix.html"
+             hx-target="#content-body"
+             hx-swap="innerHTML">
+            <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 text-white">2-Stroke Fuel Mix</h4>
+            <p class="text-gray-400 text-sm mb-4">Calculate the correct fuel to oil ratio for 2-stroke premix</p>
+            <span class="inline-block px-3 py-1 bg-orange-900/30 text-orange-300 rounded-full text-xs">Tools</span>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for Search and Filter -->
+<script>
+    let currentCategory = 'all';
+    
+    function filterCalculators() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const cards = document.querySelectorAll('.calculator-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const title = card.getAttribute('data-title')?.toLowerCase() || '';
+            const description = card.getAttribute('data-description')?.toLowerCase() || '';
+            const category = card.getAttribute('data-category') || '';
+            
+            const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+            const matchesCategory = currentCategory === 'all' || category === currentCategory;
+            
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Update results count
+        updateResultsCount(visibleCount);
+    }
+    
+    function filterByCategory(category) {
+        currentCategory = category;
+        
+        // Update button styles
+        document.querySelectorAll('.category-filter').forEach(btn => {
+            if (btn.getAttribute('data-category') === category) {
+                btn.className = 'category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-sm';
+            } else {
+                btn.className = 'category-filter px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50';
+            }
+        });
+        
+        // Filter cards
+        filterCalculators();
+    }
+    
+    function updateResultsCount(count) {
+        const countElement = document.getElementById('count-number');
+        const pluralElement = document.getElementById('count-plural');
+        
+        if (countElement) {
+            countElement.textContent = count;
+            pluralElement.textContent = count === 1 ? '' : 's';
+        }
+    }
+    
+    // Initialize results count
+    document.addEventListener('DOMContentLoaded', function() {
+        filterCalculators();
+    });
+</script>

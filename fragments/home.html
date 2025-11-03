@@ -1,0 +1,48 @@
+<!-- Hero Banner -->
+<section class="relative py-20 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-4xl mx-auto">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6">
+                <span class="gradient-text">Formula Calculators</span>
+                <br>
+                <span class="text-white">Made Simple</span>
+            </h2>
+            <p class="text-xl sm:text-2xl text-gray-300 mb-8 leading-relaxed">
+                Explore calculators for maths, science, finance, and health — all built to give fast, reliable answers and help you understand the formulas behind them.
+
+            </p>
+        </div>
+    </div>
+    
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+    </div>
+</section>
+
+<!-- Content Body -->
+<main id="content-body" 
+        hx-get="/calculators.html"
+        hx-trigger="load"
+        hx-swap="innerHTML">
+    <!-- Home content will be loaded here -->
+    <div class="text-center text-gray-400 py-12">
+        <p>Loading...</p>
+    </div>
+</main>
+
+<!-- About Section -->
+<section id="about" class="mb-16 py-12 border-t border-slate-700/50">
+    <div class="max-w-3xl mx-auto text-center">
+        <h3 class="text-3xl font-bold mb-6">About Formularoo</h3>
+        <p class="text-gray-300 text-lg leading-relaxed">
+            Formularoo provides a comprehensive suite of formula calculators to help you solve complex problems
+            across various scientific and mathematical disciplines. Our calculators are designed to be intuitive,
+            accurate, and fast.
+        </p>
+    </div>
+</section>
+
+

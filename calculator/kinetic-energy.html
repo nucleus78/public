@@ -1,0 +1,371 @@
+<!-- Kinetic Energy Calculator Page -->
+<!-- This combines the base calculator template with the Kinetic Energy calculator component -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Kinetic Energy Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate the kinetic energy of moving objects</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Unit Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex items-center bg-slate-700/50 rounded-lg p-1 border border-slate-600">
+                <button 
+                    type="button"
+                    id="unit-metric"
+                    onclick="toggleUnit('metric')"
+                    class="unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-sm">
+                    Metric
+                </button>
+                <button 
+                    type="button"
+                    id="unit-imperial"
+                    onclick="toggleUnit('imperial')"
+                    class="unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white">
+                    Imperial
+                </button>
+            </div>
+        </div>
+
+        <!-- Kinetic Energy Calculator Form -->
+        <form id="kinetic-energy-form" class="space-y-6" onsubmit="calculateKineticEnergy(event)">
+            <!-- Mass Input -->
+            <div>
+                <label for="mass" class="block text-sm font-medium text-gray-300 mb-2">
+                    Mass <span id="mass-unit">(kg)</span>
+                </label>
+                <input 
+                    type="number" 
+                    id="mass" 
+                    name="mass"
+                    step="any"
+                    min="0"
+                    placeholder="0"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg">
+            </div>
+
+            <!-- Velocity Input -->
+            <div>
+                <label for="velocity" class="block text-sm font-medium text-gray-300 mb-2">
+                    Velocity <span id="velocity-unit">(m/s)</span>
+                </label>
+                <input 
+                    type="number" 
+                    id="velocity" 
+                    name="velocity"
+                    step="any"
+                    min="0"
+                    placeholder="0"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg">
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold text-white hover:from-yellow-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Kinetic Energy
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="kinetic-energy-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Kinetic Energy Result -->
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-600/50">
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Kinetic Energy</p>
+                            <p class="text-3xl font-bold text-yellow-400" id="ke-value"></p>
+                            <p class="text-sm text-gray-400 mt-1" id="ke-alternative"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400 mb-1">Input Values</p>
+                            <p class="text-lg font-semibold text-gray-300" id="input-values"></p>
+                        </div>
+                    </div>
+
+                    <!-- Calculation Steps -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation</h4>
+                        <div id="calculation-steps" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3">
+                            <!-- Calculation steps will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Energy Comparison -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Energy Comparisons</h4>
+                        <div id="energy-comparisons" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Comparisons will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Kinetic Energy
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Kinetic energy is the energy possessed by an object due to its motion. 
+                    It depends on the object's mass and velocity.
+                </p>
+                
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                    <p class="text-lg text-yellow-300">KE = ½ × m × v²</p>
+                    <p class="text-sm text-gray-400">where:</p>
+                    <div class="text-left space-y-1 text-sm text-gray-400 mt-2">
+                        <p>• KE = Kinetic Energy (Joules)</p>
+                        <p>• m = Mass (kg)</p>
+                        <p>• v = Velocity (m/s)</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-yellow-400 mb-2">Key Points</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Kinetic energy is always positive</li>
+                            <li>• Energy is proportional to mass</li>
+                            <li>• Energy is proportional to velocity squared</li>
+                            <li>• Doubling velocity quadruples energy</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-yellow-400 mb-2">Common Examples</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Walking person: ~70 J</li>
+                            <li>• Running person: ~500 J</li>
+                            <li>• Car at 60 km/h: ~200,000 J</li>
+                            <li>• Bullet: ~2,000 J</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-yellow-400 mb-2">Units</p>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li><strong class="text-gray-300">Metric:</strong> Mass in kg, Velocity in m/s → Energy in Joules (J)</li>
+                        <li><strong class="text-gray-300">Imperial:</strong> Mass in lbs, Velocity in mph → Energy in Foot-pounds (ft·lb)</li>
+                        <li>1 Joule = 0.7376 foot-pounds</li>
+                        <li>1 foot-pound = 1.3558 Joules</li>
+                    </ul>
+                </div>
+                
+                <p class="text-sm text-gray-400 mt-4">
+                    <strong class="text-gray-300">Note:</strong> 
+                    Kinetic energy increases with the square of velocity, meaning small increases in speed result in 
+                    large increases in energy. This is why high-speed collisions are so dangerous.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Kinetic Energy Calculation -->
+<script>
+    let currentUnit = 'metric';
+    
+    // Conversion constants
+    const LBS_TO_KG = 0.453592;
+    const MPH_TO_MPS = 0.44704;
+    const FT_LB_TO_J = 1.35582;
+    
+    function toggleUnit(unit) {
+        currentUnit = unit;
+        
+        const metricBtn = document.getElementById('unit-metric');
+        const imperialBtn = document.getElementById('unit-imperial');
+        const massUnit = document.getElementById('mass-unit');
+        const velocityUnit = document.getElementById('velocity-unit');
+        const massInput = document.getElementById('mass');
+        const velocityInput = document.getElementById('velocity');
+        
+        // Update button styles
+        if (unit === 'metric') {
+            metricBtn.className = 'unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-sm';
+            imperialBtn.className = 'unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            massUnit.textContent = '(kg)';
+            velocityUnit.textContent = '(m/s)';
+        } else {
+            metricBtn.className = 'unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            imperialBtn.className = 'unit-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-sm';
+            massUnit.textContent = '(lbs)';
+            velocityUnit.textContent = '(mph)';
+        }
+        
+        // Clear result when switching units
+        document.getElementById('kinetic-energy-result').classList.add('hidden');
+        
+        // Clear inputs
+        massInput.value = '';
+        velocityInput.value = '';
+    }
+    
+    function formatNumber(num, decimals = 2) {
+        if (num === 0) return '0';
+        if (Math.abs(num) < 0.01) {
+            return num.toExponential(2);
+        }
+        if (Math.abs(num) >= 1000000) {
+            return num.toExponential(2);
+        }
+        return num.toLocaleString(undefined, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
+    
+    function calculateKineticEnergy(event) {
+        event.preventDefault();
+        
+        const mass = parseFloat(document.getElementById('mass').value);
+        const velocity = parseFloat(document.getElementById('velocity').value);
+        
+        if (isNaN(mass) || mass <= 0) {
+            alert('Please enter a valid positive mass value.');
+            return;
+        }
+        
+        if (isNaN(velocity) || velocity < 0) {
+            alert('Please enter a valid non-negative velocity value.');
+            return;
+        }
+        
+        let massKg, velocityMps, keJoules, keImperial;
+        let massDisplay, velocityDisplay;
+        
+        if (currentUnit === 'metric') {
+            massKg = mass;
+            velocityMps = velocity;
+            massDisplay = formatNumber(mass) + ' kg';
+            velocityDisplay = formatNumber(velocity) + ' m/s';
+        } else {
+            // Convert imperial to metric for calculation
+            massKg = mass * LBS_TO_KG;
+            velocityMps = velocity * MPH_TO_MPS;
+            massDisplay = formatNumber(mass) + ' lbs';
+            velocityDisplay = formatNumber(velocity) + ' mph';
+        }
+        
+        // Calculate kinetic energy: KE = 0.5 * m * v²
+        keJoules = 0.5 * massKg * velocityMps * velocityMps;
+        keImperial = keJoules / FT_LB_TO_J;
+        
+        // Display result
+        if (currentUnit === 'metric') {
+            document.getElementById('ke-value').textContent = formatNumber(keJoules) + ' J';
+            document.getElementById('ke-alternative').textContent = 
+                '≈ ' + formatNumber(keImperial) + ' ft·lb';
+        } else {
+            document.getElementById('ke-value').textContent = formatNumber(keImperial) + ' ft·lb';
+            document.getElementById('ke-alternative').textContent = 
+                '≈ ' + formatNumber(keJoules) + ' J';
+        }
+        
+        document.getElementById('input-values').innerHTML = 
+            `Mass: ${massDisplay}<br>Velocity: ${velocityDisplay}`;
+        
+        // Calculation steps
+        const steps = [];
+        steps.push(`KE = ½ × m × v²`);
+        
+        if (currentUnit === 'metric') {
+            steps.push(`KE = ½ × ${formatNumber(massKg, 4)} kg × (${formatNumber(velocityMps, 4)} m/s)²`);
+            steps.push(`KE = ½ × ${formatNumber(massKg, 4)} kg × ${formatNumber(velocityMps * velocityMps, 4)} m²/s²`);
+            steps.push(`KE = ${formatNumber(0.5 * massKg * velocityMps * velocityMps, 4)} kg·m²/s²`);
+            steps.push(`KE = ${formatNumber(keJoules)} J`);
+        } else {
+            steps.push(`Converting: ${formatNumber(mass)} lbs = ${formatNumber(massKg, 4)} kg`);
+            steps.push(`Converting: ${formatNumber(velocity)} mph = ${formatNumber(velocityMps, 4)} m/s`);
+            steps.push(`KE = ½ × ${formatNumber(massKg, 4)} kg × (${formatNumber(velocityMps, 4)} m/s)²`);
+            steps.push(`KE = ${formatNumber(keJoules)} J = ${formatNumber(keImperial)} ft·lb`);
+        }
+        
+        document.getElementById('calculation-steps').innerHTML = steps.join('<br>');
+        
+        // Energy comparisons
+        const comparisons = [];
+        
+        // Convert to different energy units for comparison
+        const kCal = keJoules / 4184; // 1 calorie = 4.184 J
+        const wattHours = keJoules / 3600; // 1 Wh = 3600 J
+        const btus = keJoules / 1055; // 1 BTU ≈ 1055 J
+        
+        if (keJoules > 0.001 && keJoules < 1000000) {
+            if (kCal > 0.001 && kCal < 1000) {
+                comparisons.push(`
+                    <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                        <p class="text-xs text-gray-400">Calories</p>
+                        <p class="text-sm font-semibold text-yellow-300">${formatNumber(kCal, 3)} kcal</p>
+                    </div>
+                `);
+            }
+            
+            if (wattHours > 0.001) {
+                comparisons.push(`
+                    <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                        <p class="text-xs text-gray-400">Electrical Energy</p>
+                        <p class="text-sm font-semibold text-yellow-300">${formatNumber(wattHours, 3)} Wh</p>
+                    </div>
+                `);
+            }
+            
+            if (btus > 0.001 && btus < 1000) {
+                comparisons.push(`
+                    <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                        <p class="text-xs text-gray-400">BTUs</p>
+                        <p class="text-sm font-semibold text-yellow-300">${formatNumber(btus, 3)} BTU</p>
+                    </div>
+                `);
+            }
+        }
+        
+        // Add velocity squared comparison
+        const vSquared = velocityMps * velocityMps;
+        comparisons.push(`
+            <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                <p class="text-xs text-gray-400">Velocity²</p>
+                <p class="text-sm font-semibold text-yellow-300">${formatNumber(vSquared, 2)} m²/s²</p>
+                <p class="text-xs text-gray-500 mt-1">(Note: Energy ∝ v²)</p>
+            </div>
+        `);
+        
+        document.getElementById('energy-comparisons').innerHTML = comparisons.join('');
+        
+        // Show result
+        document.getElementById('kinetic-energy-result').classList.remove('hidden');
+        document.getElementById('kinetic-energy-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

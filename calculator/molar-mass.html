@@ -1,0 +1,354 @@
+<!-- Molar Mass Calculator Page -->
+<!-- This combines the base calculator template with the Molar Mass calculator component -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Molar Mass Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate the molar mass of chemical compounds from their molecular formula</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Molar Mass Calculator Form -->
+        <form id="molar-mass-form" class="space-y-6" onsubmit="calculateMolarMass(event)">
+            <!-- Chemical Formula Input -->
+            <div>
+                <label for="formula" class="block text-sm font-medium text-gray-300 mb-2">
+                    Chemical Formula
+                </label>
+                <input 
+                    type="text" 
+                    id="formula" 
+                    name="formula"
+                    placeholder="H2O, CO2, CaCO3, C6H12O6, etc."
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent font-mono text-lg">
+                <p class="text-xs text-gray-500 mt-1">
+                    Enter a chemical formula (e.g., H2O, NaCl, Ca(OH)2, C6H12O6). Supports subscripts and parentheses.
+                </p>
+            </div>
+
+            <!-- Common Formulas Quick Buttons -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2">Quick Examples:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="setFormula('H2O')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">H₂O</button>
+                    <button type="button" onclick="setFormula('CO2')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">CO₂</button>
+                    <button type="button" onclick="setFormula('NaCl')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">NaCl</button>
+                    <button type="button" onclick="setFormula('CaCO3')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">CaCO₃</button>
+                    <button type="button" onclick="setFormula('C6H12O6')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">C₆H₁₂O₆</button>
+                    <button type="button" onclick="setFormula('Ca(OH)2')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Ca(OH)₂</button>
+                    <button type="button" onclick="setFormula('Fe2O3')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Fe₂O₃</button>
+                    <button type="button" onclick="setFormula('H2SO4')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">H₂SO₄</button>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-pink-600 to-rose-600 rounded-lg font-semibold text-white hover:from-pink-700 hover:to-rose-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Molar Mass
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="molar-mass-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Molar Mass Result -->
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-600/50">
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Molar Mass</p>
+                            <p class="text-3xl font-bold text-pink-400" id="molar-mass-value"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400 mb-1">Formula</p>
+                            <p class="text-lg font-semibold text-gray-300 font-mono" id="formula-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Element Breakdown -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Element Breakdown</h4>
+                        <div id="element-breakdown" class="space-y-2">
+                            <!-- Elements will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Calculation Steps -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation</h4>
+                        <div id="calculation-steps" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3">
+                            <!-- Calculation steps will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Molar Mass
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Molar mass is the mass of one mole of a substance, measured in grams per mole (g/mol). 
+                    It's calculated by summing the atomic masses of all atoms in a molecule.
+                </p>
+                
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                    <p class="text-lg">Molar Mass = Σ (Atomic Mass × Number of Atoms)</p>
+                    <p class="text-sm text-gray-400">Sum of all atomic masses in the compound</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-pink-400 mb-2">Common Examples</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Water (H₂O): 18.015 g/mol</li>
+                            <li>• Carbon Dioxide (CO₂): 44.009 g/mol</li>
+                            <li>• Table Salt (NaCl): 58.443 g/mol</li>
+                            <li>• Glucose (C₆H₁₂O₆): 180.156 g/mol</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-pink-400 mb-2">Formula Notation</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Subscripts: H₂O (2 hydrogen atoms)</li>
+                            <li>• Parentheses: Ca(OH)₂</li>
+                            <li>• Multiple elements: C₆H₁₂O₆</li>
+                            <li>• Enter as: H2O, Ca(OH)2, etc.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-400 mt-4">
+                    <strong class="text-gray-300">Note:</strong> 
+                    Atomic masses are based on the standard atomic weights. Some elements have isotopic variations 
+                    that may result in slightly different molar masses. Always use appropriate significant figures.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Molar Mass Calculation -->
+<script>
+    // Periodic table with atomic masses (most common isotopes)
+    const atomicMasses = {
+        'H': 1.008, 'He': 4.003, 'Li': 6.941, 'Be': 9.012, 'B': 10.811,
+        'C': 12.011, 'N': 14.007, 'O': 15.999, 'F': 18.998, 'Ne': 20.180,
+        'Na': 22.990, 'Mg': 24.305, 'Al': 26.982, 'Si': 28.086, 'P': 30.974,
+        'S': 32.065, 'Cl': 35.453, 'Ar': 39.948, 'K': 39.098, 'Ca': 40.078,
+        'Sc': 44.956, 'Ti': 47.867, 'V': 50.942, 'Cr': 51.996, 'Mn': 54.938,
+        'Fe': 55.845, 'Co': 58.933, 'Ni': 58.693, 'Cu': 63.546, 'Zn': 65.380,
+        'Ga': 69.723, 'Ge': 72.641, 'As': 74.922, 'Se': 78.971, 'Br': 79.904,
+        'Kr': 83.798, 'Rb': 85.468, 'Sr': 87.62, 'Y': 88.906, 'Zr': 91.224,
+        'Nb': 92.906, 'Mo': 95.950, 'Tc': 98.000, 'Ru': 101.07, 'Rh': 102.906,
+        'Pd': 106.42, 'Ag': 107.868, 'Cd': 112.411, 'In': 114.818, 'Sn': 118.710,
+        'Sb': 121.760, 'Te': 127.60, 'I': 126.904, 'Xe': 131.293, 'Cs': 132.905,
+        'Ba': 137.327, 'La': 138.905, 'Ce': 140.116, 'Pr': 140.908, 'Nd': 144.242,
+        'Pm': 145.000, 'Sm': 150.36, 'Eu': 151.964, 'Gd': 157.25, 'Tb': 158.925,
+        'Dy': 162.500, 'Ho': 164.930, 'Er': 167.259, 'Tm': 168.934, 'Yb': 173.045,
+        'Lu': 174.967, 'Hf': 178.49, 'Ta': 180.948, 'W': 183.84, 'Re': 186.207,
+        'Os': 190.23, 'Ir': 192.217, 'Pt': 195.084, 'Au': 196.967, 'Hg': 200.592,
+        'Tl': 204.383, 'Pb': 207.2, 'Bi': 208.980, 'Po': 209.000, 'At': 210.000,
+        'Rn': 222.000, 'Fr': 223.000, 'Ra': 226.000, 'Ac': 227.000, 'Th': 232.038,
+        'Pa': 231.036, 'U': 238.029, 'Np': 237.000, 'Pu': 244.000
+    };
+    
+    function setFormula(formula) {
+        document.getElementById('formula').value = formula;
+    }
+    
+    function parseFormula(formula) {
+        // Remove all spaces and convert to uppercase for consistency
+        formula = formula.replace(/\s/g, '').trim();
+        if (!formula) return null;
+        
+        // Simple parser for chemical formulas
+        // Handles: element symbols, numbers (subscripts), parentheses
+        const elements = {};
+        let i = 0;
+        const len = formula.length;
+        
+        function parseElement() {
+            if (i >= len) return null;
+            
+            // Check for two-letter element (capital + lowercase)
+            let element = '';
+            if (i < len && /[A-Z]/.test(formula[i])) {
+                element += formula[i++];
+                if (i < len && /[a-z]/.test(formula[i])) {
+                    element += formula[i++];
+                }
+                
+                if (atomicMasses[element]) {
+                    return element;
+                }
+            }
+            return null;
+        }
+        
+        function parseNumber() {
+            let num = '';
+            while (i < len && /[0-9]/.test(formula[i])) {
+                num += formula[i++];
+            }
+            return num ? parseInt(num, 10) : 1;
+        }
+        
+        function parseGroup() {
+            const groupElements = {};
+            
+            if (formula[i] === '(') {
+                i++; // skip '('
+                
+                while (i < len && formula[i] !== ')') {
+                    const elem = parseElement();
+                    if (!elem) break;
+                    
+                    const count = parseNumber();
+                    groupElements[elem] = (groupElements[elem] || 0) + count;
+                }
+                
+                if (i < len && formula[i] === ')') {
+                    i++; // skip ')'
+                    const multiplier = parseNumber();
+                    
+                    // Multiply all counts in the group
+                    for (const elem in groupElements) {
+                        groupElements[elem] *= multiplier;
+                    }
+                    
+                    return groupElements;
+                }
+            } else {
+                // Parse single element
+                const elem = parseElement();
+                if (elem) {
+                    const count = parseNumber();
+                    groupElements[elem] = count;
+                    return groupElements;
+                }
+            }
+            
+            return null;
+        }
+        
+        // Parse the entire formula
+        while (i < len) {
+            const group = parseGroup();
+            if (group) {
+                for (const elem in group) {
+                    elements[elem] = (elements[elem] || 0) + group[elem];
+                }
+            } else {
+                // Invalid character or structure
+                return null;
+            }
+        }
+        
+        return elements;
+    }
+    
+    function calculateMolarMass(event) {
+        event.preventDefault();
+        
+        const formula = document.getElementById('formula').value.trim();
+        
+        if (!formula) {
+            alert('Please enter a chemical formula');
+            return;
+        }
+        
+        // Parse the formula
+        const elements = parseFormula(formula);
+        
+        if (!elements || Object.keys(elements).length === 0) {
+            alert('Invalid chemical formula. Please check your input and try again.');
+            return;
+        }
+        
+        // Calculate molar mass
+        let totalMass = 0;
+        const breakdown = [];
+        const steps = [];
+        
+        for (const element in elements) {
+            const count = elements[element];
+            const atomicMass = atomicMasses[element];
+            
+            if (!atomicMass) {
+                alert(`Unknown element: ${element}. Please check your formula.`);
+                return;
+            }
+            
+            const elementMass = atomicMass * count;
+            totalMass += elementMass;
+            
+            breakdown.push({
+                element: element,
+                count: count,
+                atomicMass: atomicMass,
+                totalMass: elementMass
+            });
+            
+            steps.push(`${element}: ${atomicMass.toFixed(3)} × ${count} = ${elementMass.toFixed(3)} g/mol`);
+        }
+        
+        // Display results
+        document.getElementById('molar-mass-value').textContent = totalMass.toFixed(3) + ' g/mol';
+        document.getElementById('formula-display').textContent = formula;
+        
+        // Display element breakdown
+        const breakdownDiv = document.getElementById('element-breakdown');
+        breakdownDiv.innerHTML = breakdown.map(item => `
+            <div class="flex justify-between items-center p-3 bg-slate-700/30 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <span class="font-bold text-pink-400">${item.element}</span>
+                    <span class="text-xs text-gray-400">× ${item.count}</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-gray-400">${item.atomicMass.toFixed(3)} × ${item.count}</span>
+                    <span class="block text-sm font-semibold text-gray-200">${item.totalMass.toFixed(3)} g/mol</span>
+                </div>
+            </div>
+        `).join('');
+        
+        // Display calculation steps
+        document.getElementById('calculation-steps').innerHTML = 
+            steps.join('<br>') + 
+            '<br><strong class="text-pink-400 mt-2 block">Total: ' + totalMass.toFixed(3) + ' g/mol</strong>';
+        
+        // Show result
+        document.getElementById('molar-mass-result').classList.remove('hidden');
+        document.getElementById('molar-mass-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

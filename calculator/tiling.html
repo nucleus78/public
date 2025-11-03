@@ -1,0 +1,324 @@
+<!-- Flooring/Tiling Area Calculator Page -->
+<!-- This combines the base calculator template with the Tiling calculator component -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Flooring & Tiling Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate the number of tiles needed for your floor area</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Tiling Calculator Form -->
+        <form id="tiling-form" class="space-y-6" onsubmit="calculateTiling(event)">
+            <!-- Floor Area Section -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">
+                    Floor Area
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="floor-length" class="block text-xs text-gray-400 mb-1">Length</label>
+                        <input 
+                            type="number" 
+                            id="floor-length" 
+                            name="floor-length"
+                            step="0.01"
+                            min="0"
+                            placeholder="5.0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">meters</p>
+                    </div>
+                    <div>
+                        <label for="floor-width" class="block text-xs text-gray-400 mb-1">Width</label>
+                        <input 
+                            type="number" 
+                            id="floor-width" 
+                            name="floor-width"
+                            step="0.01"
+                            min="0"
+                            placeholder="4.0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">meters</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-xs text-gray-400 mb-2">Or enter total area directly:</p>
+                    <input 
+                        type="number" 
+                        id="total-area" 
+                        name="total-area"
+                        step="0.01"
+                        min="0"
+                        placeholder="20.0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                    <p class="text-xs text-gray-500 mt-1">square meters (m²)</p>
+                </div>
+            </div>
+
+            <!-- Tile Size Section -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">
+                    Tile Size
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="tile-length" class="block text-xs text-gray-400 mb-1">Tile Length</label>
+                        <input 
+                            type="number" 
+                            id="tile-length" 
+                            name="tile-length"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.30"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">meters (or cm, see note)</p>
+                    </div>
+                    <div>
+                        <label for="tile-width" class="block text-xs text-gray-400 mb-1">Tile Width</label>
+                        <input 
+                            type="number" 
+                            id="tile-width" 
+                            name="tile-width"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.30"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">meters (or cm, see note)</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="tile-size-cm"
+                            class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-violet-500 focus:ring-violet-500">
+                        <span class="text-xs text-gray-400">Tile sizes are in centimeters (e.g., 30cm × 30cm)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Waste Percentage -->
+            <div>
+                <label for="waste-percentage" class="block text-sm font-medium text-gray-300 mb-2">
+                    Waste/Extra (%)
+                </label>
+                <input 
+                    type="number" 
+                    id="waste-percentage" 
+                    name="waste-percentage"
+                    step="0.5"
+                    min="0"
+                    max="50"
+                    value="10"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Recommended: 10% for simple layouts, 15-20% for complex patterns</p>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg font-semibold text-white hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Tiles Needed
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="tiling-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Tiles Needed -->
+                    <div class="flex justify-between items-center pb-4 border-b border-slate-600/50">
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Total Tiles Needed</p>
+                            <p class="text-3xl font-bold text-violet-400" id="tiles-needed"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400 mb-1">Floor Area</p>
+                            <p class="text-lg font-semibold text-gray-300" id="floor-area-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Base Tiles Required</span>
+                            <span class="text-lg font-semibold text-gray-200" id="base-tiles"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Waste/Extra ({<span id="waste-display">10</span>}%)</span>
+                            <span class="text-lg font-semibold text-violet-400" id="waste-tiles"></span>
+                        </div>
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-600/50">
+                            <span class="text-gray-300 font-medium">Total Tiles (with waste)</span>
+                            <span class="text-2xl font-bold text-white" id="total-tiles-display"></span>
+                        </div>
+                    </div>
+
+                    <!-- Tile Info -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-400">Tile Size</p>
+                                <p class="text-gray-200 font-medium" id="tile-size-display"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Tiles per m²</p>
+                                <p class="text-gray-200 font-medium" id="tiles-per-square-meter"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculation Formula -->
+            <div class="mt-4 bg-slate-900/30 rounded-lg p-4 border border-slate-700/50">
+                <p class="text-xs text-gray-400 mb-2">Calculation Formula</p>
+                <p class="text-sm font-mono text-gray-300" id="calculation-formula"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Tile Calculation
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Calculate how many tiles you need for your flooring project. Enter your floor dimensions and tile size to get an accurate estimate.
+                </p>
+                
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                    <p class="text-lg">Tiles Needed = Floor Area ÷ Tile Area × (1 + Waste%)</p>
+                    <p class="text-sm text-gray-400">Always round up to the nearest whole tile</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Common Tile Sizes</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• 30cm × 30cm (0.30m × 0.30m)</li>
+                            <li>• 40cm × 40cm (0.40m × 0.40m)</li>
+                            <li>• 60cm × 60cm (0.60m × 0.60m)</li>
+                            <li>• 10cm × 20cm (mosaic/subway)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-violet-400 mb-2">Waste Percentage Guide</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• 10%: Simple rectangular rooms</li>
+                            <li>• 15%: Rooms with obstacles/corners</li>
+                            <li>• 20%: Complex patterns/diagonal</li>
+                            <li>• 25%: Intricate designs/herringbone</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-400 mt-4">
+                    <strong class="text-gray-300">Tips:</strong> 
+                    - If tiles are measured in centimeters, check the "Tile sizes are in centimeters" option
+                    - Always buy a few extra tiles for repairs and future use
+                    - Consider tile orientation and pattern when estimating
+                    - Account for grout spacing if needed
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Tiling Calculation -->
+<script>
+    function calculateTiling(event) {
+        event.preventDefault();
+        
+        // Get floor area
+        let floorArea;
+        const floorLength = parseFloat(document.getElementById('floor-length').value);
+        const floorWidth = parseFloat(document.getElementById('floor-width').value);
+        const totalArea = parseFloat(document.getElementById('total-area').value);
+        
+        if (totalArea && totalArea > 0) {
+            floorArea = totalArea;
+        } else if (floorLength && floorLength > 0 && floorWidth && floorWidth > 0) {
+            floorArea = floorLength * floorWidth;
+        } else {
+            alert('Please enter either floor dimensions (length × width) or total floor area');
+            return;
+        }
+        
+        // Get tile size
+        let tileLength = parseFloat(document.getElementById('tile-length').value);
+        let tileWidth = parseFloat(document.getElementById('tile-width').value);
+        const isCm = document.getElementById('tile-size-cm').checked;
+        
+        if (!tileLength || tileLength <= 0 || !tileWidth || tileWidth <= 0) {
+            alert('Please enter valid tile dimensions');
+            return;
+        }
+        
+        // Convert cm to meters if needed
+        if (isCm) {
+            tileLength = tileLength / 100;
+            tileWidth = tileWidth / 100;
+        }
+        
+        // Calculate tile area
+        const tileArea = tileLength * tileWidth;
+        
+        // Get waste percentage
+        const wastePercent = parseFloat(document.getElementById('waste-percentage').value) || 10;
+        const wasteMultiplier = 1 + (wastePercent / 100);
+        
+        // Calculate tiles needed
+        const baseTiles = Math.ceil(floorArea / tileArea);
+        const wasteTiles = Math.ceil(baseTiles * (wastePercent / 100));
+        const totalTiles = Math.ceil(baseTiles * wasteMultiplier);
+        
+        // Calculate tiles per square meter
+        const tilesPerSquareMeter = Math.ceil(1 / tileArea);
+        
+        // Build formula
+        const formula = `Tiles = Floor Area (${floorArea.toFixed(2)} m²) ÷ Tile Area (${tileArea.toFixed(4)} m²) × (1 + ${wastePercent}%) = ${baseTiles} × ${wasteMultiplier.toFixed(2)} = ${totalTiles} tiles`;
+        
+        // Display results
+        document.getElementById('tiles-needed').textContent = totalTiles + ' tiles';
+        document.getElementById('floor-area-display').textContent = floorArea.toFixed(2) + ' m²';
+        document.getElementById('base-tiles').textContent = baseTiles + ' tiles';
+        document.getElementById('waste-tiles').textContent = wasteTiles + ' tiles';
+        document.getElementById('waste-display').textContent = wastePercent;
+        document.getElementById('total-tiles-display').textContent = totalTiles + ' tiles';
+        document.getElementById('tile-size-display').textContent = (isCm ? tileLength * 100 : tileLength).toFixed(2) + (isCm ? 'cm' : 'm') + ' × ' + (isCm ? tileWidth * 100 : tileWidth).toFixed(2) + (isCm ? 'cm' : 'm');
+        document.getElementById('tiles-per-square-meter').textContent = tilesPerSquareMeter + ' tiles/m²';
+        document.getElementById('calculation-formula').textContent = formula;
+        
+        // Show result
+        document.getElementById('tiling-result').classList.remove('hidden');
+        document.getElementById('tiling-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

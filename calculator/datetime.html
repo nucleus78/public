@@ -1,0 +1,391 @@
+<!-- Date/Time Calculator Page -->
+<!-- Calculate the difference between two dates and times -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Date/Time Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate hours, days, and time difference between two dates and times</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Date/Time Calculator Form -->
+        <form id="datetime-form" class="space-y-6" onsubmit="calculateDateTime(event)">
+            <!-- Start Date/Time Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Start Date & Time</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="start-date" class="block text-xs text-gray-400 mb-1">Date</label>
+                        <input 
+                            type="date" 
+                            id="start-date" 
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono">
+                    </div>
+                    <div>
+                        <label for="start-time" class="block text-xs text-gray-400 mb-1">Time</label>
+                        <input 
+                            type="time" 
+                            id="start-time" 
+                            step="1"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow Display -->
+            <div class="flex justify-center">
+                <div class="text-2xl font-bold text-gray-400">↓</div>
+            </div>
+
+            <!-- End Date/Time Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">End Date & Time</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="end-date" class="block text-xs text-gray-400 mb-1">Date</label>
+                        <input 
+                            type="date" 
+                            id="end-date" 
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono">
+                    </div>
+                    <div>
+                        <label for="end-time" class="block text-xs text-gray-400 mb-1">Time</label>
+                        <input 
+                            type="time" 
+                            id="end-time" 
+                            step="1"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Preset Buttons -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2 text-center">Quick Presets:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" onclick="setNowAsStart()" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Now → End</button>
+                    <button type="button" onclick="setTodayExample()" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Today (9 AM - 5 PM)</button>
+                    <button type="button" onclick="setWeekExample()" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 Week Apart</button>
+                    <button type="button" onclick="setMonthExample()" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 Month Apart</button>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg font-semibold text-white hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Difference
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="datetime-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Result -->
+                    <div class="pb-4 border-b border-slate-600/50">
+                        <p class="text-sm text-gray-400 mb-2">Time Difference</p>
+                        <p class="text-4xl font-bold text-indigo-400 font-mono mb-2" id="hours-display"></p>
+                        <p class="text-lg text-gray-300 font-mono" id="detailed-display"></p>
+                        <p class="text-sm text-gray-400 mt-2" id="direction-text"></p>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Breakdown</h4>
+                        <div id="breakdown-display" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <!-- Breakdown items will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Calculation Details -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Date/Time Calculations
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    This calculator computes the precise difference between two dates and times, 
+                    showing results in hours, days, weeks, and other time units.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-indigo-400 mb-2">How It Works</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Enter start and end dates/times</li>
+                            <li>• Calculates precise difference</li>
+                            <li>• Shows multiple time units</li>
+                            <li>• Handles negative differences</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-indigo-400 mb-2">Common Uses</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Work hour calculations</li>
+                            <li>• Project timelines</li>
+                            <li>• Event duration tracking</li>
+                            <li>• Age calculations</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-indigo-400 mb-2">Time Units</p>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li><strong class="text-gray-300">Hours:</strong> Primary result unit</li>
+                        <li><strong class="text-gray-300">Days:</strong> Hours ÷ 24</li>
+                        <li><strong class="text-gray-300">Weeks:</strong> Days ÷ 7</li>
+                        <li><strong class="text-gray-300">Minutes/Seconds:</strong> For precise timing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Date/Time Calculator -->
+<script>
+    function setNowAsStart() {
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+        
+        document.getElementById('start-date').value = dateStr;
+        document.getElementById('start-time').value = timeStr;
+    }
+    
+    function setTodayExample() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start-date').value = today;
+        document.getElementById('start-time').value = '09:00';
+        document.getElementById('end-date').value = today;
+        document.getElementById('end-time').value = '17:00';
+    }
+    
+    function setWeekExample() {
+        const today = new Date();
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        
+        document.getElementById('start-date').value = today.toISOString().split('T')[0];
+        document.getElementById('start-time').value = '00:00';
+        document.getElementById('end-date').value = nextWeek.toISOString().split('T')[0];
+        document.getElementById('end-time').value = '00:00';
+    }
+    
+    function setMonthExample() {
+        const today = new Date();
+        const nextMonth = new Date(today);
+        nextMonth.setMonth(today.getMonth() + 1);
+        
+        document.getElementById('start-date').value = today.toISOString().split('T')[0];
+        document.getElementById('start-time').value = '00:00';
+        document.getElementById('end-date').value = nextMonth.toISOString().split('T')[0];
+        document.getElementById('end-time').value = '00:00';
+    }
+    
+    function calculateDateTime(event) {
+        event.preventDefault();
+        
+        const startDate = document.getElementById('start-date').value;
+        const startTime = document.getElementById('start-time').value;
+        const endDate = document.getElementById('end-date').value;
+        const endTime = document.getElementById('end-time').value;
+        
+        if (!startDate || !startTime || !endDate || !endTime) {
+            alert('Please fill in all date and time fields.');
+            return;
+        }
+        
+        // Create Date objects
+        const start = new Date(`${startDate}T${startTime}`);
+        const end = new Date(`${endDate}T${endTime}`);
+        
+        // Check if dates are valid
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            alert('Please enter valid dates and times.');
+            return;
+        }
+        
+        // Calculate difference in milliseconds
+        const diffMs = end - start;
+        const isNegative = diffMs < 0;
+        const absDiffMs = Math.abs(diffMs);
+        
+        // Convert to various time units
+        const diffSeconds = Math.floor(absDiffMs / 1000);
+        const diffMinutes = Math.floor(diffSeconds / 60);
+        const diffHours = diffMs / (1000 * 60 * 60);
+        const absDiffHours = Math.abs(diffHours);
+        const diffDays = absDiffHours / 24;
+        const diffWeeks = diffDays / 7;
+        const diffMonths = diffDays / 30.44; // Average days per month
+        const diffYears = diffDays / 365.25; // Average days per year
+        
+        // Format hours display
+        const hoursWhole = Math.floor(absDiffHours);
+        const minutesRemainder = Math.floor((absDiffHours - hoursWhole) * 60);
+        const secondsRemainder = diffSeconds % 60;
+        
+        // Display main result
+        document.getElementById('hours-display').textContent = 
+            (isNegative ? '-' : '') + absDiffHours.toFixed(2) + ' hours';
+        
+        // Detailed display
+        const detailedParts = [];
+        if (hoursWhole > 0 || minutesRemainder > 0 || secondsRemainder > 0 || absDiffHours === 0) {
+            if (hoursWhole > 0) detailedParts.push(`${hoursWhole} hour${hoursWhole !== 1 ? 's' : ''}`);
+            if (minutesRemainder > 0) detailedParts.push(`${minutesRemainder} minute${minutesRemainder !== 1 ? 's' : ''}`);
+            if (secondsRemainder > 0 && absDiffHours < 1) detailedParts.push(`${secondsRemainder} second${secondsRemainder !== 1 ? 's' : ''}`);
+            if (detailedParts.length === 0) detailedParts.push('0 seconds');
+        }
+        
+        document.getElementById('detailed-display').textContent = detailedParts.join(', ');
+        
+        // Direction text
+        if (isNegative) {
+            document.getElementById('direction-text').textContent = 
+                'End time is before start time (negative difference)';
+        } else if (diffMs === 0) {
+            document.getElementById('direction-text').textContent = 'Start and end times are the same';
+        } else {
+            document.getElementById('direction-text').textContent = 
+                'End time is after start time';
+        }
+        
+        // Breakdown display
+        const breakdown = [];
+        
+        if (absDiffHours >= 1) {
+            breakdown.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400">Hours</p>
+                    <p class="text-sm font-semibold text-indigo-300">${absDiffHours.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                </div>
+            `);
+        }
+        
+        if (diffDays >= 0.01) {
+            breakdown.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400">Days</p>
+                    <p class="text-sm font-semibold text-indigo-300">${diffDays.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                </div>
+            `);
+        }
+        
+        if (diffWeeks >= 0.01) {
+            breakdown.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400">Weeks</p>
+                    <p class="text-sm font-semibold text-indigo-300">${diffWeeks.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                </div>
+            `);
+        }
+        
+        if (diffMonths >= 0.01) {
+            breakdown.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400">Months</p>
+                    <p class="text-sm font-semibold text-indigo-300">${diffMonths.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                </div>
+            `);
+        }
+        
+        if (diffYears >= 0.01) {
+            breakdown.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400">Years</p>
+                    <p class="text-sm font-semibold text-indigo-300">${diffYears.toLocaleString(undefined, {maximumFractionDigits: 3})}</p>
+                </div>
+            `);
+        }
+        
+        breakdown.push(`
+            <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                <p class="text-xs text-gray-400">Minutes</p>
+                <p class="text-sm font-semibold text-indigo-300">${diffMinutes.toLocaleString()}</p>
+            </div>
+        `);
+        
+        breakdown.push(`
+            <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                <p class="text-xs text-gray-400">Seconds</p>
+                <p class="text-sm font-semibold text-indigo-300">${diffSeconds.toLocaleString()}</p>
+            </div>
+        `);
+        
+        document.getElementById('breakdown-display').innerHTML = breakdown.join('');
+        
+        // Calculation details
+        const details = [];
+        details.push(`Start: ${start.toLocaleString()}`);
+        details.push(`End: ${end.toLocaleString()}`);
+        details.push(`Difference: ${diffMs.toLocaleString()} milliseconds`);
+        details.push(`Difference: ${absDiffHours.toFixed(2)} hours`);
+        
+        if (diffDays >= 1) {
+            details.push(`Difference: ${diffDays.toFixed(2)} days`);
+        }
+        if (diffWeeks >= 1) {
+            details.push(`Difference: ${diffWeeks.toFixed(2)} weeks`);
+        }
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('datetime-result').classList.remove('hidden');
+        document.getElementById('datetime-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Set default values to today
+    window.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+        
+        document.getElementById('start-date').value = today;
+        document.getElementById('start-time').value = timeStr;
+        document.getElementById('end-date').value = today;
+        document.getElementById('end-time').value = timeStr;
+    });
+</script>
+

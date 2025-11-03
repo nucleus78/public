@@ -1,0 +1,39 @@
+<!-- Base Calculator Page Template -->
+<!-- This template provides the standard layout for all calculators -->
+<!-- The calculator component will be inserted into the #calculator-content div -->
+
+<div class="max-w-4xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-6" mt-10>
+        <button 
+            hx-get="index.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="flex items-center text-gray-400 hover:text-white transition-colors group">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Calculators
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div id="calculator-icon" class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl mb-4">
+            <!-- Icon will be inserted by calculator component -->
+        </div>
+        <h1 id="calculator-title" class="text-4xl font-bold mb-3">Calculator Title</h1>
+        <p id="calculator-description" class="text-gray-400 text-lg">Calculator description will go here</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div id="calculator-content" class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Calculator component will be inserted here -->
+    </div>
+
+    <!-- Formula Info Section (optional, can be populated by calculator) -->
+    <div id="calculator-info" class="mt-8">
+        <!-- Additional info about the formula can be inserted here -->
+    </div>
+</div>
+

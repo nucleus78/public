@@ -1,0 +1,431 @@
+<!-- Mortgage Calculator Page -->
+<!-- Calculate monthly mortgage payments, total interest, and amortization -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Mortgage Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate monthly payments, total interest, and see your amortization schedule</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Mortgage Calculator Form -->
+        <form id="mortgage-form" class="space-y-6" onsubmit="calculateMortgage(event)">
+            <!-- Loan Amount -->
+            <div>
+                <label for="loan-amount" class="block text-sm font-medium text-gray-300 mb-2">
+                    Loan Amount
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                    <input 
+                        type="number" 
+                        id="loan-amount" 
+                        name="loan-amount"
+                        step="1000"
+                        min="0"
+                        placeholder="500000"
+                        class="w-full pl-8 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                </div>
+            </div>
+
+            <!-- Interest Rate -->
+            <div>
+                <label for="interest-rate" class="block text-sm font-medium text-gray-300 mb-2">
+                    Annual Interest Rate
+                </label>
+                <div class="relative">
+                    <input 
+                        type="number" 
+                        id="interest-rate" 
+                        name="interest-rate"
+                        step="0.01"
+                        min="0"
+                        max="30"
+                        placeholder="4.5"
+                        class="w-full pl-4 pr-12 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                    <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">%</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Enter the annual interest rate (e.g., 4.5 for 4.5%)</p>
+            </div>
+
+            <!-- Loan Term -->
+            <div>
+                <label for="loan-term" class="block text-sm font-medium text-gray-300 mb-2">
+                    Loan Term
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="loan-term" 
+                        name="loan-term"
+                        step="1"
+                        min="1"
+                        max="50"
+                        value="30"
+                        placeholder="30"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                    <select 
+                        id="term-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                        <option value="years">Years</option>
+                        <option value="months">Months</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Common terms: 15, 20, 25, or 30 years</p>
+            </div>
+
+            <!-- Quick Examples -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2">Quick Examples:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="setExample(400000, 4.5, 30)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">$400k @ 4.5% / 30yr</button>
+                    <button type="button" onclick="setExample(300000, 5.0, 15)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">$300k @ 5% / 15yr</button>
+                    <button type="button" onclick="setExample(500000, 3.75, 25)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">$500k @ 3.75% / 25yr</button>
+                    <button type="button" onclick="setExample(250000, 4.25, 20)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">$250k @ 4.25% / 20yr</button>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg font-semibold text-white hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Mortgage
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="mortgage-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Payment Result -->
+                    <div class="pb-4 border-b border-slate-600/50">
+                        <p class="text-sm text-gray-400 mb-2">Monthly Payment</p>
+                        <p class="text-4xl font-bold text-emerald-400 mb-2" id="monthly-payment"></p>
+                        <p class="text-sm text-gray-400" id="payment-breakdown"></p>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Total Amount Paid</p>
+                            <p class="text-xl font-bold text-emerald-300" id="total-paid"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Total Interest</p>
+                            <p class="text-xl font-bold text-orange-300" id="total-interest"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Interest Percentage</p>
+                            <p class="text-xl font-bold text-amber-300" id="interest-percentage"></p>
+                        </div>
+                    </div>
+
+                    <!-- Yearly Breakdown -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Yearly Breakdown</h4>
+                        <div id="yearly-breakdown" class="space-y-2 max-h-64 overflow-y-auto">
+                            <!-- Yearly breakdown will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Payment Schedule Graph -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Principal vs Interest Over Time</h4>
+                        <div id="payment-graph" class="bg-slate-900/30 rounded-lg p-4">
+                            <!-- Graph will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Calculation Details -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Mortgage Calculations
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    This calculator uses the standard mortgage formula to compute your monthly payment. 
+                    The payment remains constant, but the proportion going toward principal vs interest changes over time.
+                </p>
+                
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                    <p class="text-lg text-emerald-300">M = P × [r(1 + r)ⁿ] / [(1 + r)ⁿ - 1]</p>
+                    <div class="text-left space-y-1 text-sm text-gray-400 mt-2">
+                        <p>• M = Monthly payment</p>
+                        <p>• P = Principal (loan amount)</p>
+                        <p>• r = Monthly interest rate (annual rate ÷ 12)</p>
+                        <p>• n = Number of payments (years × 12)</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-emerald-400 mb-2">Payment Structure</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Early payments are mostly interest</li>
+                            <li>• Later payments are mostly principal</li>
+                            <li>• Total payment stays constant</li>
+                            <li>• More principal paid each month</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-emerald-400 mb-2">Tips</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Shorter terms = less interest</li>
+                            <li>• Lower rates = lower payments</li>
+                            <li>• Extra payments reduce interest</li>
+                            <li>• Consider PMI for down payments &lt;20%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Mortgage Calculator -->
+<script>
+    function setExample(amount, rate, years) {
+        document.getElementById('loan-amount').value = amount;
+        document.getElementById('interest-rate').value = rate;
+        document.getElementById('loan-term').value = years;
+        document.getElementById('term-unit').value = 'years';
+    }
+    
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+    }
+    
+    function calculateMortgage(event) {
+        event.preventDefault();
+        
+        const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+        const interestRate = parseFloat(document.getElementById('interest-rate').value);
+        const loanTerm = parseFloat(document.getElementById('loan-term').value);
+        const termUnit = document.getElementById('term-unit').value;
+        
+        // Validate inputs
+        if (isNaN(loanAmount) || loanAmount <= 0) {
+            alert('Please enter a valid loan amount greater than zero.');
+            return;
+        }
+        
+        if (isNaN(interestRate) || interestRate < 0 || interestRate > 30) {
+            alert('Please enter a valid interest rate between 0 and 30%.');
+            return;
+        }
+        
+        if (isNaN(loanTerm) || loanTerm <= 0) {
+            alert('Please enter a valid loan term.');
+            return;
+        }
+        
+        // Calculate number of payments
+        const numPayments = termUnit === 'years' ? loanTerm * 12 : loanTerm;
+        const monthlyRate = interestRate / 100 / 12;
+        
+        // Calculate monthly payment using standard mortgage formula
+        // M = P × [r(1 + r)ⁿ] / [(1 + r)ⁿ - 1]
+        let monthlyPayment = 0;
+        
+        if (interestRate === 0) {
+            // No interest, simple division
+            monthlyPayment = loanAmount / numPayments;
+        } else {
+            const numerator = monthlyRate * Math.pow(1 + monthlyRate, numPayments);
+            const denominator = Math.pow(1 + monthlyRate, numPayments) - 1;
+            monthlyPayment = loanAmount * (numerator / denominator);
+        }
+        
+        // Calculate totals
+        const totalPaid = monthlyPayment * numPayments;
+        const totalInterest = totalPaid - loanAmount;
+        const interestPercentage = (totalInterest / totalPaid) * 100;
+        
+        // Display main results
+        document.getElementById('monthly-payment').textContent = formatCurrency(monthlyPayment);
+        
+        const principalPerMonth = loanAmount / numPayments;
+        const firstMonthInterest = loanAmount * monthlyRate;
+        document.getElementById('payment-breakdown').textContent = 
+            `First payment: ${formatCurrency(firstMonthInterest)} interest + ${formatCurrency(monthlyPayment - firstMonthInterest)} principal`;
+        
+        document.getElementById('total-paid').textContent = formatCurrency(totalPaid);
+        document.getElementById('total-interest').textContent = formatCurrency(totalInterest);
+        document.getElementById('interest-percentage').textContent = interestPercentage.toFixed(1) + '%';
+        
+        // Calculate yearly breakdown
+        let remainingBalance = loanAmount;
+        let yearlyBreakdown = [];
+        
+        for (let year = 1; year <= Math.ceil(numPayments / 12); year++) {
+            let yearPrincipal = 0;
+            let yearInterest = 0;
+            
+            const paymentsThisYear = Math.min(12, numPayments - (year - 1) * 12);
+            
+            for (let payment = 0; payment < paymentsThisYear; payment++) {
+                const interestPayment = remainingBalance * monthlyRate;
+                const principalPayment = monthlyPayment - interestPayment;
+                
+                yearInterest += interestPayment;
+                yearPrincipal += principalPayment;
+                remainingBalance -= principalPayment;
+            }
+            
+            if (yearPrincipal > 0 || yearInterest > 0) {
+                yearlyBreakdown.push({
+                    year: year,
+                    principal: yearPrincipal,
+                    interest: yearInterest,
+                    total: yearPrincipal + yearInterest,
+                    balance: remainingBalance
+                });
+            }
+        }
+        
+        // Display yearly breakdown
+        const breakdownHTML = yearlyBreakdown.map(item => `
+            <div class="flex justify-between items-center p-3 bg-slate-700/30 rounded-lg border border-slate-600/30">
+                <div>
+                    <span class="font-semibold text-gray-300">Year ${item.year}</span>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Principal: ${formatCurrency(item.principal)} | Interest: ${formatCurrency(item.interest)}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="text-sm font-semibold text-emerald-300">${formatCurrency(item.total)}</span>
+                    <div class="text-xs text-gray-400 mt-1">
+                        Balance: ${formatCurrency(item.balance)}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        document.getElementById('yearly-breakdown').innerHTML = breakdownHTML;
+        
+        // Create payment graph (simplified bar chart representation)
+        const graphData = [];
+        const graphYears = Math.min(10, Math.ceil(numPayments / 12)); // Show first 10 years or all years if less
+        remainingBalance = loanAmount;
+        
+        for (let year = 1; year <= graphYears; year++) {
+            let yearPrincipal = 0;
+            let yearInterest = 0;
+            
+            const paymentsThisYear = Math.min(12, numPayments - (year - 1) * 12);
+            
+            for (let payment = 0; payment < paymentsThisYear; payment++) {
+                const interestPayment = remainingBalance * monthlyRate;
+                const principalPayment = monthlyPayment - interestPayment;
+                
+                yearInterest += interestPayment;
+                yearPrincipal += principalPayment;
+                remainingBalance -= principalPayment;
+            }
+            
+            graphData.push({
+                year: year,
+                principal: yearPrincipal,
+                interest: yearInterest
+            });
+        }
+        
+        const maxValue = Math.max(...graphData.map(d => d.principal + d.interest));
+        
+        const graphHTML = `
+            <div class="space-y-2">
+                ${graphData.map(item => {
+                    const total = item.principal + item.interest;
+                    const principalPercent = (item.principal / maxValue) * 100;
+                    const interestPercent = (item.interest / maxValue) * 100;
+                    
+                    return `
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-gray-400 w-12">Y${item.year}</span>
+                            <div class="flex-1 h-6 bg-slate-800 rounded overflow-hidden flex">
+                                <div class="bg-emerald-500" style="width: ${(item.principal / maxValue) * 100}%" title="Principal: ${formatCurrency(item.principal)}"></div>
+                                <div class="bg-orange-500" style="width: ${(item.interest / maxValue) * 100}%" title="Interest: ${formatCurrency(item.interest)}"></div>
+                            </div>
+                            <span class="text-xs text-gray-400 w-20 text-right">${formatCurrency(total)}</span>
+                        </div>
+                    `;
+                }).join('')}
+                <div class="flex items-center space-x-2 mt-3 pt-2 border-t border-slate-700">
+                    <span class="text-xs text-gray-400 w-12"></span>
+                    <div class="flex-1 flex items-center space-x-4">
+                        <div class="flex items-center space-x-1">
+                            <div class="w-3 h-3 bg-emerald-500 rounded"></div>
+                            <span class="text-xs text-gray-400">Principal</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <div class="w-3 h-3 bg-orange-500 rounded"></div>
+                            <span class="text-xs text-gray-400">Interest</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('payment-graph').innerHTML = graphHTML;
+        
+        // Calculation details
+        const details = [];
+        details.push(`Loan Amount: ${formatCurrency(loanAmount)}`);
+        details.push(`Annual Interest Rate: ${interestRate}%`);
+        details.push(`Monthly Interest Rate: ${(monthlyRate * 100).toFixed(4)}%`);
+        details.push(`Loan Term: ${loanTerm} ${termUnit === 'years' ? 'years' : 'months'} (${numPayments} payments)`);
+        details.push(`Monthly Payment: ${formatCurrency(monthlyPayment)}`);
+        details.push(`Total Payments: ${numPayments}`);
+        details.push(`Total Amount Paid: ${formatCurrency(totalPaid)}`);
+        details.push(`Total Interest: ${formatCurrency(totalInterest)}`);
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('mortgage-result').classList.remove('hidden');
+        document.getElementById('mortgage-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

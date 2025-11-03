@@ -1,0 +1,576 @@
+<!-- Slope and Grade Calculator Page -->
+<!-- Calculate site gradients and drainage fall -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Slope & Grade Calculator</h1>
+        <p class="text-gray-400 text-lg">Determine site gradients, slopes, and drainage fall calculations</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Input Method Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex items-center bg-slate-700/50 rounded-lg p-1 border border-slate-600">
+                <button 
+                    type="button"
+                    id="method-rise-run"
+                    onclick="setInputMethod('rise-run')"
+                    class="method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm">
+                    Rise & Run
+                </button>
+                <button 
+                    type="button"
+                    id="method-percentage"
+                    onclick="setInputMethod('percentage')"
+                    class="method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white">
+                    Percentage
+                </button>
+                <button 
+                    type="button"
+                    id="method-angle"
+                    onclick="setInputMethod('angle')"
+                    class="method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white">
+                    Angle
+                </button>
+            </div>
+        </div>
+
+        <!-- Slope Calculator Form -->
+        <form id="slope-form" class="space-y-6" onsubmit="calculateSlope(event)">
+            <!-- Rise & Run Input Method -->
+            <div id="input-rise-run" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="rise" class="block text-sm font-medium text-gray-300 mb-2">
+                            Rise (Vertical Distance)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="rise" 
+                            name="rise"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                    </div>
+                    <div>
+                        <label for="run" class="block text-sm font-medium text-gray-300 mb-2">
+                            Run (Horizontal Distance)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="run" 
+                            name="run"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                    </div>
+                </div>
+                <select 
+                    id="rise-run-unit"
+                    class="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm">
+                    <option value="meters">Meters (m)</option>
+                    <option value="feet">Feet (ft)</option>
+                    <option value="inches">Inches (in)</option>
+                    <option value="millimeters">Millimeters (mm)</option>
+                </select>
+            </div>
+
+            <!-- Percentage Input Method -->
+            <div id="input-percentage" class="hidden space-y-4">
+                <div>
+                    <label for="slope-percentage" class="block text-sm font-medium text-gray-300 mb-2">
+                        Slope Percentage (%)
+                    </label>
+                    <input 
+                        type="number" 
+                        id="slope-percentage" 
+                        name="slope-percentage"
+                        step="0.01"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                </div>
+                <div>
+                    <label for="distance-percentage" class="block text-sm font-medium text-gray-300 mb-2">
+                        Distance (Optional)
+                    </label>
+                    <div class="flex gap-4">
+                        <input 
+                            type="number" 
+                            id="distance-percentage" 
+                            name="distance-percentage"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                        <select 
+                            id="distance-percentage-unit"
+                            class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                            <option value="meters">Meters</option>
+                            <option value="feet">Feet</option>
+                        </select>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Enter distance to calculate rise/fall</p>
+                </div>
+            </div>
+
+            <!-- Angle Input Method -->
+            <div id="input-angle" class="hidden space-y-4">
+                <div>
+                    <label for="slope-angle" class="block text-sm font-medium text-gray-300 mb-2">
+                        Angle (Degrees)
+                    </label>
+                    <input 
+                        type="number" 
+                        id="slope-angle" 
+                        name="slope-angle"
+                        step="0.1"
+                        min="0"
+                        max="90"
+                        placeholder="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                </div>
+                <div>
+                    <label for="distance-angle" class="block text-sm font-medium text-gray-300 mb-2">
+                        Distance (Optional)
+                    </label>
+                    <div class="flex gap-4">
+                        <input 
+                            type="number" 
+                            id="distance-angle" 
+                            name="distance-angle"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg">
+                        <select 
+                            id="distance-angle-unit"
+                            class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                            <option value="meters">Meters</option>
+                            <option value="feet">Feet</option>
+                        </select>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Enter distance to calculate rise/run</p>
+                </div>
+            </div>
+
+            <!-- Quick Examples -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2 text-center">Quick Examples:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" onclick="setRiseRun(1, 100)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1:100 (1%)</button>
+                    <button type="button" onclick="setRiseRun(1, 50)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1:50 (2%)</button>
+                    <button type="button" onclick="setRiseRun(1, 20)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1:20 (5%)</button>
+                    <button type="button" onclick="setRiseRun(25, 1000, 'mm')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">25mm fall / 1m</button>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg font-semibold text-white hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Slope & Grade
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="slope-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Results -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-slate-600/50">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 text-center">
+                            <p class="text-xs text-gray-400 mb-1">Slope Ratio</p>
+                            <p class="text-2xl font-bold text-emerald-400 font-mono" id="slope-ratio"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 text-center">
+                            <p class="text-xs text-gray-400 mb-1">Grade (%)</p>
+                            <p class="text-2xl font-bold text-emerald-400 font-mono" id="grade-percentage"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 text-center">
+                            <p class="text-xs text-gray-400 mb-1">Angle</p>
+                            <p class="text-2xl font-bold text-emerald-400 font-mono" id="angle-degrees"></p>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Results -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Rise (Vertical)</p>
+                            <p class="text-xl font-bold text-emerald-300" id="rise-result"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Run (Horizontal)</p>
+                            <p class="text-xl font-bold text-emerald-300" id="run-result"></p>
+                        </div>
+                    </div>
+
+                    <!-- Drainage Fall Calculations -->
+                    <div id="drainage-section" class="mt-4 pt-4 border-t border-slate-600/50 hidden">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Drainage Fall</h4>
+                        <div id="drainage-results" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Drainage results will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Calculation Details -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Slope & Grade Calculations
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Slope and grade calculations are essential for construction, drainage, and site preparation. 
+                    Slope can be expressed as a ratio, percentage, or angle.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg text-emerald-300">Grade (%) = (Rise / Run) × 100</p>
+                        <p class="text-sm text-gray-400">Percentage grade formula</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2">
+                        <p class="text-lg text-emerald-300">Angle = arctan(Rise / Run)</p>
+                        <p class="text-sm text-gray-400">Angle in degrees</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-emerald-400 mb-2">Common Slopes</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Flat: 0 - 1%</li>
+                            <li>• Gentle: 1 - 3%</li>
+                            <li>• Moderate: 3 - 5%</li>
+                            <li>• Steep: 5 - 10%</li>
+                            <li>• Very Steep: > 10%</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-emerald-400 mb-2">Drainage Standards</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Minimum: 1:100 (1%)</li>
+                            <li>• Recommended: 1:50 (2%)</li>
+                            <li>• Pipes: 1:60 to 1:40</li>
+                            <li>• Gutters: 1:200 to 1:100</li>
+                            <li>• Roads: 1.5 - 3%</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-emerald-400 mb-2">Examples</p>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li>• <strong>1:100</strong> = 1% grade = 0.57° angle = 10mm fall per meter</li>
+                        <li>• <strong>1:50</strong> = 2% grade = 1.15° angle = 20mm fall per meter</li>
+                        <li>• <strong>1:20</strong> = 5% grade = 2.86° angle = 50mm fall per meter</li>
+                        <li>• <strong>1:10</strong> = 10% grade = 5.71° angle = 100mm fall per meter</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Slope Calculator -->
+<script>
+    let currentMethod = 'rise-run';
+    
+    function setInputMethod(method) {
+        currentMethod = method;
+        
+        // Hide all input sections
+        document.getElementById('input-rise-run').classList.add('hidden');
+        document.getElementById('input-percentage').classList.add('hidden');
+        document.getElementById('input-angle').classList.add('hidden');
+        
+        // Show selected method
+        if (method === 'rise-run') {
+            document.getElementById('input-rise-run').classList.remove('hidden');
+            document.getElementById('method-rise-run').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm';
+            document.getElementById('method-percentage').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            document.getElementById('method-angle').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+        } else if (method === 'percentage') {
+            document.getElementById('input-percentage').classList.remove('hidden');
+            document.getElementById('method-rise-run').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            document.getElementById('method-percentage').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm';
+            document.getElementById('method-angle').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+        } else if (method === 'angle') {
+            document.getElementById('input-angle').classList.remove('hidden');
+            document.getElementById('method-rise-run').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            document.getElementById('method-percentage').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            document.getElementById('method-angle').className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm';
+        }
+        
+        // Clear results when changing methods
+        document.getElementById('slope-result').classList.add('hidden');
+    }
+    
+    function setRiseRun(rise, run, unit = 'meters') {
+        document.getElementById('rise').value = rise;
+        document.getElementById('run').value = run;
+        if (unit !== 'meters') {
+            document.getElementById('rise-run-unit').value = unit;
+        }
+        setInputMethod('rise-run');
+    }
+    
+    function convertToMeters(value, unit) {
+        switch(unit) {
+            case 'meters':
+                return value;
+            case 'feet':
+                return value * 0.3048;
+            case 'inches':
+                return value * 0.0254;
+            case 'millimeters':
+                return value / 1000;
+            default:
+                return value;
+        }
+    }
+    
+    function formatNumber(num, decimals = 4) {
+        if (num === 0) return '0';
+        if (Math.abs(num) < 0.0001) {
+            return num.toExponential(3);
+        }
+        return parseFloat(num.toFixed(decimals)).toString();
+    }
+    
+    function formatDistance(value, unit) {
+        if (unit === 'meters') {
+            if (value < 0.001) {
+                return (value * 1000).toFixed(1) + ' mm';
+            } else if (value < 1) {
+                return (value * 100).toFixed(1) + ' cm';
+            } else {
+                return formatNumber(value, 2) + ' m';
+            }
+        } else {
+            if (value < 0.01) {
+                return (value * 12).toFixed(1) + ' in';
+            } else {
+                return formatNumber(value, 2) + ' ft';
+            }
+        }
+    }
+    
+    function calculateSlope(event) {
+        event.preventDefault();
+        
+        let rise, run, riseMeters, runMeters;
+        
+        // Calculate from input method
+        if (currentMethod === 'rise-run') {
+            rise = parseFloat(document.getElementById('rise').value);
+            run = parseFloat(document.getElementById('run').value);
+            const unit = document.getElementById('rise-run-unit').value;
+            
+            if (isNaN(rise) || rise < 0) {
+                alert('Please enter a valid rise value.');
+                return;
+            }
+            
+            if (isNaN(run) || run <= 0) {
+                alert('Please enter a valid run value greater than zero.');
+                return;
+            }
+            
+            riseMeters = convertToMeters(rise, unit);
+            runMeters = convertToMeters(run, unit);
+            
+        } else if (currentMethod === 'percentage') {
+            const percentage = parseFloat(document.getElementById('slope-percentage').value);
+            
+            if (isNaN(percentage) || percentage < 0) {
+                alert('Please enter a valid slope percentage.');
+                return;
+            }
+            
+            const distance = parseFloat(document.getElementById('distance-percentage').value);
+            const distanceUnit = document.getElementById('distance-percentage-unit').value;
+            
+            if (!isNaN(distance) && distance > 0) {
+                // Calculate from percentage and distance
+                runMeters = convertToMeters(distance, distanceUnit);
+                riseMeters = (percentage / 100) * runMeters;
+                rise = riseMeters;
+                run = runMeters;
+            } else {
+                // Just convert percentage to ratio (assume run = 100)
+                runMeters = 100;
+                riseMeters = (percentage / 100) * runMeters;
+                rise = percentage;
+                run = 100;
+            }
+            
+        } else if (currentMethod === 'angle') {
+            const angle = parseFloat(document.getElementById('slope-angle').value);
+            
+            if (isNaN(angle) || angle < 0 || angle >= 90) {
+                alert('Please enter a valid angle between 0 and 90 degrees.');
+                return;
+            }
+            
+            const angleRadians = (angle * Math.PI) / 180;
+            const distance = parseFloat(document.getElementById('distance-angle').value);
+            const distanceUnit = document.getElementById('distance-angle-unit').value;
+            
+            if (!isNaN(distance) && distance > 0) {
+                // Calculate from angle and distance
+                const distanceM = convertToMeters(distance, distanceUnit);
+                // Distance is the hypotenuse
+                runMeters = distanceM * Math.cos(angleRadians);
+                riseMeters = distanceM * Math.sin(angleRadians);
+                rise = riseMeters;
+                run = runMeters;
+            } else {
+                // Just convert angle to ratio (assume run = 100)
+                runMeters = 100;
+                riseMeters = runMeters * Math.tan(angleRadians);
+                rise = riseMeters;
+                run = 100;
+            }
+        }
+        
+        // Calculate slope values
+        const gradePercentage = (riseMeters / runMeters) * 100;
+        const angleDegrees = Math.atan(riseMeters / runMeters) * (180 / Math.PI);
+        
+        // Calculate and simplify ratio (run:rise)
+        // Normalize by scaling both values up to avoid decimal precision issues
+        const scale = 1000000; // Scale factor for gcd calculation
+        const gcd = (a, b) => {
+            a = Math.round(a);
+            b = Math.round(b);
+            return b === 0 ? a : gcd(b, a % b);
+        };
+        
+        const scaledRun = Math.round(runMeters * scale);
+        const scaledRise = Math.round(riseMeters * scale);
+        const divisor = gcd(scaledRun, scaledRise);
+        
+        const simplifiedRun = scaledRun / divisor;
+        const simplifiedRise = scaledRise / divisor;
+        
+        // Display results
+        // Ratio is displayed as run:rise (e.g., 100:1 means 100 units run for 1 unit rise)
+        if (simplifiedRise === 1) {
+            document.getElementById('slope-ratio').textContent = `${simplifiedRun.toLocaleString()}:1`;
+        } else {
+            document.getElementById('slope-ratio').textContent = 
+                `${simplifiedRun.toLocaleString()}:${simplifiedRise.toLocaleString()}`;
+        }
+        
+        document.getElementById('grade-percentage').textContent = 
+            gradePercentage.toFixed(2) + '%';
+        
+        document.getElementById('angle-degrees').textContent = 
+            angleDegrees.toFixed(2) + '°';
+        
+        const displayUnit = currentMethod === 'rise-run' ? 
+            document.getElementById('rise-run-unit').value : 'meters';
+        
+        document.getElementById('rise-result').textContent = 
+            formatDistance(riseMeters, displayUnit);
+        document.getElementById('run-result').textContent = 
+            formatDistance(runMeters, displayUnit);
+        
+        // Drainage fall calculations
+        const drainageSection = document.getElementById('drainage-section');
+        const drainageResults = document.getElementById('drainage-results');
+        
+        if (currentMethod === 'rise-run' || (!isNaN(document.getElementById('distance-percentage')?.value) || !isNaN(document.getElementById('distance-angle')?.value))) {
+            drainageSection.classList.remove('hidden');
+            
+            const commonDistances = [
+                { label: 'Per Meter', value: 1, unit: 'meters' },
+                { label: 'Per 5 Meters', value: 5, unit: 'meters' },
+                { label: 'Per 10 Meters', value: 10, unit: 'meters' },
+                { label: 'Per Foot', value: 1, unit: 'feet' },
+                { label: 'Per 10 Feet', value: 10, unit: 'feet' }
+            ];
+            
+            const drainageHTML = commonDistances.map(dist => {
+                const fall = (gradePercentage / 100) * convertToMeters(dist.value, dist.unit);
+                return `
+                    <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                        <p class="text-xs text-gray-400 mb-1">${dist.label}</p>
+                        <p class="text-sm font-semibold text-emerald-300">
+                            ${formatDistance(fall, dist.unit === 'meters' ? 'meters' : 'feet')}
+                        </p>
+                    </div>
+                `;
+            }).join('');
+            
+            drainageResults.innerHTML = drainageHTML;
+        } else {
+            drainageSection.classList.add('hidden');
+        }
+        
+        // Calculation details
+        const details = [];
+        details.push(`Rise: ${formatDistance(riseMeters, 'meters')} (${formatDistance(riseMeters * 3.28084, 'feet')})`);
+        details.push(`Run: ${formatDistance(runMeters, 'meters')} (${formatDistance(runMeters * 3.28084, 'feet')})`);
+        const ratioText = simplifiedRise === 1 ? 
+            `${simplifiedRun}:1` : 
+            `${simplifiedRun}:${simplifiedRise}`;
+        details.push(`Slope Ratio: ${ratioText}`);
+        details.push(`Grade: ${gradePercentage.toFixed(4)}%`);
+        details.push(`Angle: ${angleDegrees.toFixed(4)}°`);
+        
+        if (gradePercentage > 0) {
+            details.push(`Fall per meter: ${(gradePercentage / 100).toFixed(4)}m (${((gradePercentage / 100) * 1000).toFixed(1)}mm)`);
+        }
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('slope-result').classList.remove('hidden');
+        document.getElementById('slope-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Initialize with rise-run method
+    setInputMethod('rise-run');
+</script>
+

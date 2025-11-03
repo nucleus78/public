@@ -1,0 +1,384 @@
+<!-- Post and Rail Fence Calculator Page -->
+<!-- Calculate posts, rails, and pailings for a fence -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-lime-500 to-green-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Post & Rail Fence Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate posts, rails, and pailings needed for your fence</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Fence Calculator Form -->
+        <form id="fence-form" class="space-y-6" onsubmit="calculateFence(event)">
+            <!-- Total Fence Length -->
+            <div>
+                <label for="fence-length" class="block text-sm font-medium text-gray-300 mb-2">
+                    Total Fence Length
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="fence-length" 
+                        name="fence-length"
+                        step="any"
+                        min="0"
+                        placeholder="0"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-lg">
+                    <select 
+                        id="length-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent">
+                        <option value="meters">Meters</option>
+                        <option value="feet">Feet</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Post Spacing -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Post Spacing</label>
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <button type="button" onclick="setPostSpacing(1.8)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1.8m</button>
+                    <button type="button" onclick="setPostSpacing(2.0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">2.0m</button>
+                    <button type="button" onclick="setPostSpacing(2.4)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">2.4m</button>
+                    <button type="button" onclick="setPostSpacing(3.0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">3.0m</button>
+                    <button type="button" onclick="setPostSpacing(2.438)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">8ft</button>
+                    <button type="button" onclick="setPostSpacing('custom')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Custom</button>
+                </div>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="post-spacing" 
+                        name="post-spacing"
+                        step="any"
+                        min="0"
+                        value="2.4"
+                        placeholder="2.4"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-lg">
+                    <select 
+                        id="spacing-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent">
+                        <option value="meters">Meters</option>
+                        <option value="feet">Feet</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Number of Rails -->
+            <div>
+                <label for="num-rails" class="block text-sm font-medium text-gray-300 mb-2">
+                    Number of Rails per Section
+                </label>
+                <input 
+                    type="number" 
+                    id="num-rails" 
+                    name="num-rails"
+                    min="1"
+                    max="5"
+                    value="2"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-lg">
+                <p class="text-xs text-gray-500 mt-1">Common: 2 rails for standard fences, 3 rails for taller fences</p>
+            </div>
+
+            <!-- Pailing Width -->
+            <div>
+                <label for="pailing-width" class="block text-sm font-medium text-gray-400 mb-2">
+                    Pailing Width <span class="text-xs text-gray-500">(optional)</span>
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="pailing-width" 
+                        name="pailing-width"
+                        step="any"
+                        min="0"
+                        placeholder="0"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-lg">
+                    <select 
+                        id="pailing-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent">
+                        <option value="mm">mm</option>
+                        <option value="inches">Inches</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Width of individual pailing/picket (for calculating quantity needed)</p>
+            </div>
+
+            <!-- Gap Between Pailings -->
+            <div id="gap-section" class="hidden">
+                <label for="pailing-gap" class="block text-sm font-medium text-gray-400 mb-2">
+                    Gap Between Pailings
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="pailing-gap" 
+                        name="pailing-gap"
+                        step="any"
+                        min="0"
+                        value="0"
+                        placeholder="0"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-lg">
+                    <select 
+                        id="gap-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent">
+                        <option value="mm">mm</option>
+                        <option value="inches">Inches</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-lime-600 to-green-600 rounded-lg font-semibold text-white hover:from-lime-700 hover:to-green-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Fence Materials
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="fence-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Results -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-slate-600/50">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Posts Required</p>
+                            <p class="text-2xl font-bold text-lime-400" id="posts-result"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Rails Required</p>
+                            <p class="text-2xl font-bold text-lime-400" id="rails-result"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Pailings Required</p>
+                            <p class="text-2xl font-bold text-lime-400" id="pailings-result"></p>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Breakdown -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Fence Calculations
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    This calculator helps you determine the materials needed for a post and rail fence. 
+                    It calculates posts (including start and end posts), rails, and pailings based on your specifications.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-lime-400 mb-2">Posts</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Posts = (Length ÷ Spacing) + 1</li>
+                            <li>• Always includes start and end posts</li>
+                            <li>• Common spacing: 2.0m - 3.0m</li>
+                            <li>• Account for 10-15% extra for corners/breaks</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-lime-400 mb-2">Rails</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Rails = Number of sections × Rails per section</li>
+                            <li>• Standard: 2 rails for most fences</li>
+                            <li>• Add extra for gates and corners</li>
+                            <li>• Each section needs full rails</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-lime-400 mb-2">Pailings/Pickets</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Based on spacing and pailing width</li>
+                            <li>• Accounts for gaps between pailings</li>
+                            <li>• Standard width: 70-100mm</li>
+                            <li>• Gap typically 3-5mm between pailings</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-lime-400 mb-2">Tips</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Always add 5-10% extra for waste</li>
+                            <li>• Consider gate openings separately</li>
+                            <li>• Account for terrain changes</li>
+                            <li>• Check local building codes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Fence Calculator -->
+<script>
+    function setPostSpacing(value) {
+        if (value === 'custom') {
+            document.getElementById('post-spacing').focus();
+            return;
+        }
+        document.getElementById('post-spacing').value = value;
+    }
+    
+    function calculateFence(event) {
+        event.preventDefault();
+        
+        // Get inputs
+        const fenceLength = parseFloat(document.getElementById('fence-length').value);
+        const lengthUnit = document.getElementById('length-unit').value;
+        const postSpacing = parseFloat(document.getElementById('post-spacing').value);
+        const spacingUnit = document.getElementById('spacing-unit').value;
+        const numRails = parseInt(document.getElementById('num-rails').value);
+        const pailingWidth = parseFloat(document.getElementById('pailing-width').value) || 0;
+        const pailingUnit = document.getElementById('pailing-unit').value;
+        const pailingGap = parseFloat(document.getElementById('pailing-gap').value) || 0;
+        const gapUnit = document.getElementById('gap-unit').value;
+        
+        // Validate inputs
+        if (isNaN(fenceLength) || fenceLength <= 0) {
+            alert('Please enter a valid fence length greater than zero.');
+            return;
+        }
+        
+        if (isNaN(postSpacing) || postSpacing <= 0) {
+            alert('Please enter a valid post spacing greater than zero.');
+            return;
+        }
+        
+        if (isNaN(numRails) || numRails <= 0) {
+            alert('Please enter a valid number of rails.');
+            return;
+        }
+        
+        // Convert to meters for calculations
+        let lengthM = lengthUnit === 'feet' ? fenceLength * 0.3048 : fenceLength;
+        let spacingM = spacingUnit === 'feet' ? postSpacing * 0.3048 : postSpacing;
+        
+        // Calculate number of sections (spaces between posts)
+        const numSections = Math.ceil(lengthM / spacingM);
+        
+        // Calculate posts: always have a post at start and end, plus posts between sections
+        // If length is exactly divisible by spacing, we have numSections sections and numSections + 1 posts
+        // If not exactly divisible, we round up sections, so posts = numSections + 1
+        const numPosts = numSections + 1;
+        
+        // Calculate rails: each section needs rails (rails span between posts)
+        const numRailsTotal = numSections * numRails;
+        
+        // Calculate pailings if width is provided
+        let numPailings = 0;
+        let pailingsCalculation = '';
+        
+        if (pailingWidth > 0) {
+            // Convert pailing width and gap to meters
+            let widthM = pailingUnit === 'inches' ? pailingWidth * 0.0254 : pailingWidth / 1000;
+            let gapM = gapUnit === 'inches' ? pailingGap * 0.0254 : pailingGap / 1000;
+            
+            // Pailings are placed along each section
+            // Each section has spacingM length
+            // Each pailing takes widthM + gapM space (except last one in section might not have gap after it)
+            
+            // Better calculation: per section
+            // Pattern: W + G + W + G + ... + W (last pailing has no gap after it)
+            // If N pailings, total space = N*W + (N-1)*G
+            // We need: N*W + (N-1)*G <= spacingM
+            // Solving: N*(W+G) <= spacingM + G
+            // N <= (spacingM + G) / (W + G)
+            let pailingsPerSection = 0;
+            if (widthM > 0) {
+                if (spacingM >= widthM) {
+                    if (gapM > 0) {
+                        // With gaps: N = floor((spacingM + gapM) / (widthM + gapM))
+                        pailingsPerSection = Math.floor((spacingM + gapM) / (widthM + gapM));
+                    } else {
+                        // No gap, pailings touch each other: N = floor(spacingM / widthM)
+                        pailingsPerSection = Math.floor(spacingM / widthM);
+                    }
+                    // Ensure at least 1 pailing per section
+                    if (pailingsPerSection < 1) {
+                        pailingsPerSection = 1;
+                    }
+                } else {
+                    pailingsPerSection = 1; // At least one pailing per section
+                }
+            }
+            
+            numPailings = pailingsPerSection * numSections;
+            
+            pailingsCalculation = `Per section: ${pailingsPerSection.toFixed(1)} pailings × ${numSections} sections = ${numPailings} total`;
+        } else {
+            pailingsCalculation = 'Enter pailing width to calculate quantity';
+        }
+        
+        // Display results
+        document.getElementById('posts-result').textContent = numPosts;
+        document.getElementById('rails-result').textContent = numRailsTotal;
+        document.getElementById('pailings-result').textContent = numPailings || 'N/A';
+        
+        // Calculation details
+        const details = [];
+        details.push(`Fence Length: ${fenceLength.toFixed(2)} ${lengthUnit} (${lengthM.toFixed(2)} m)`);
+        details.push(`Post Spacing: ${postSpacing.toFixed(2)} ${spacingUnit} (${spacingM.toFixed(2)} m)`);
+        details.push(`Number of Sections: ${numSections}`);
+        details.push(`Posts: ${numSections} sections + 1 end post = ${numPosts} posts`);
+        details.push(`Rails: ${numSections} sections × ${numRails} rails = ${numRailsTotal} rails`);
+        if (numPailings > 0) {
+            details.push(`Pailings: ${pailingsCalculation}`);
+        } else {
+            details.push(`Pailings: ${pailingsCalculation}`);
+        }
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('fence-result').classList.remove('hidden');
+        document.getElementById('fence-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Show/hide gap section when pailing width is entered
+    document.getElementById('pailing-width').addEventListener('input', function() {
+        const gapSection = document.getElementById('gap-section');
+        if (parseFloat(this.value) > 0) {
+            gapSection.classList.remove('hidden');
+        } else {
+            gapSection.classList.add('hidden');
+        }
+    });
+</script>
+

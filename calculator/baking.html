@@ -1,0 +1,371 @@
+<!-- Baking Measurement Converter Page -->
+<!-- Convert baking measurements to metric weights -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Baking Measurement Converter</h1>
+        <p class="text-gray-400 text-lg">Convert baking measurements (cups, tablespoons, etc.) to metric weights</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Baking Converter Form -->
+        <form id="baking-form" class="space-y-6" onsubmit="convertBaking(event)">
+            <!-- Ingredient Selection -->
+            <div>
+                <label for="ingredient" class="block text-sm font-medium text-gray-300 mb-2">
+                    Ingredient
+                </label>
+                <select 
+                    id="ingredient" 
+                    name="ingredient"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-lg">
+                    <option value="">Select an ingredient...</option>
+                    <optgroup label="Flours">
+                        <option value="all-purpose-flour">All-Purpose Flour</option>
+                        <option value="whole-wheat-flour">Whole Wheat Flour</option>
+                        <option value="cake-flour">Cake Flour</option>
+                        <option value="bread-flour">Bread Flour</option>
+                        <option value="almond-flour">Almond Flour</option>
+                    </optgroup>
+                    <optgroup label="Sugars">
+                        <option value="granulated-sugar">Granulated Sugar</option>
+                        <option value="brown-sugar">Brown Sugar (packed)</option>
+                        <option value="powdered-sugar">Powdered Sugar (Icing Sugar)</option>
+                        <option value="coconut-sugar">Coconut Sugar</option>
+                    </optgroup>
+                    <optgroup label="Fats & Oils">
+                        <option value="butter">Butter</option>
+                        <option value="margarine">Margarine</option>
+                        <option value="vegetable-oil">Vegetable Oil</option>
+                        <option value="olive-oil">Olive Oil</option>
+                        <option value="coconut-oil">Coconut Oil (melted)</option>
+                    </optgroup>
+                    <optgroup label="Liquids">
+                        <option value="water">Water</option>
+                        <option value="milk">Milk (whole)</option>
+                        <option value="heavy-cream">Heavy Cream</option>
+                        <option value="honey">Honey</option>
+                        <option value="maple-syrup">Maple Syrup</option>
+                    </optgroup>
+                    <optgroup label="Other Ingredients">
+                        <option value="cocoa-powder">Cocoa Powder</option>
+                        <option value="oats">Rolled Oats</option>
+                        <option value="rice">Rice (uncooked)</option>
+                        <option value="chopped-nuts">Chopped Nuts</option>
+                        <option value="chocolate-chips">Chocolate Chips</option>
+                        <option value="shredded-cheese">Shredded Cheese</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <!-- Volume Input -->
+            <div>
+                <label for="volume-amount" class="block text-sm font-medium text-gray-300 mb-2">
+                    Volume Amount
+                </label>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="volume-amount" 
+                        name="volume-amount"
+                        step="0.01"
+                        min="0"
+                        placeholder="1"
+                        value="1"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-lg">
+                    <select 
+                        id="volume-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                        <option value="cups">Cups</option>
+                        <option value="tablespoons">Tablespoons (Tbsp)</option>
+                        <option value="teaspoons">Teaspoons (tsp)</option>
+                        <option value="fluid-ounces">Fluid Ounces (fl oz)</option>
+                        <option value="milliliters">Milliliters (mL)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2">Quick Conversions:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="setVolume(0.25, 'cups')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1/4 cup</button>
+                    <button type="button" onclick="setVolume(0.5, 'cups')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1/2 cup</button>
+                    <button type="button" onclick="setVolume(1, 'cups')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 cup</button>
+                    <button type="button" onclick="setVolume(1, 'tablespoons')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 Tbsp</button>
+                    <button type="button" onclick="setVolume(1, 'teaspoons')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 tsp</button>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-600 rounded-lg font-semibold text-white hover:from-amber-700 hover:to-yellow-700 transition-all shadow-lg hover:shadow-xl">
+                Convert to Metric Weight
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="baking-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Result -->
+                    <div class="pb-4 border-b border-slate-600/50">
+                        <p class="text-sm text-gray-400 mb-2">Weight</p>
+                        <p class="text-4xl font-bold text-amber-400 mb-2" id="weight-result"></p>
+                        <p class="text-sm text-gray-400" id="conversion-detail"></p>
+                    </div>
+
+                    <!-- Alternative Display -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Grams</p>
+                            <p class="text-xl font-bold text-amber-300" id="grams-result"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Kilograms</p>
+                            <p class="text-xl font-bold text-amber-300" id="kilograms-result"></p>
+                        </div>
+                    </div>
+
+                    <!-- Common Conversions -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Common Conversions</h4>
+                        <div id="common-conversions" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                            <!-- Common conversions will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Baking Conversions
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Baking by weight (metric) is more accurate than volume measurements, as ingredient densities can vary. 
+                    These conversions use standard reference weights per cup for common baking ingredients.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Why Weigh?</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• More accurate and consistent results</li>
+                            <li>• Eliminates packing differences</li>
+                            <li>• Professional bakers use weights</li>
+                            <li>• Easier to scale recipes</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-amber-400 mb-2">Tips</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Weights are approximate</li>
+                            <li>• Flour: scoop and level method</li>
+                            <li>• Brown sugar: packed tightly</li>
+                            <li>• Ingredients at room temperature</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-amber-400 mb-2">Volume Conversions</p>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li>• 1 cup = 16 tablespoons = 48 teaspoons</li>
+                        <li>• 1 cup = 8 fluid ounces ≈ 240 mL</li>
+                        <li>• 1 tablespoon = 3 teaspoons = 15 mL</li>
+                        <li>• 1 teaspoon = 5 mL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Baking Converter -->
+<script>
+    // Ingredient weights per cup (in grams)
+    const ingredientWeights = {
+        // Flours
+        'all-purpose-flour': 120,
+        'whole-wheat-flour': 120,
+        'cake-flour': 115,
+        'bread-flour': 127,
+        'almond-flour': 96,
+        
+        // Sugars
+        'granulated-sugar': 200,
+        'brown-sugar': 220,
+        'powdered-sugar': 120,
+        'coconut-sugar': 200,
+        
+        // Fats & Oils
+        'butter': 227,
+        'margarine': 227,
+        'vegetable-oil': 218,
+        'olive-oil': 218,
+        'coconut-oil': 218,
+        
+        // Liquids
+        'water': 240,
+        'milk': 240,
+        'heavy-cream': 240,
+        'honey': 340,
+        'maple-syrup': 320,
+        
+        // Other
+        'cocoa-powder': 100,
+        'oats': 80,
+        'rice': 185,
+        'chopped-nuts': 120,
+        'chocolate-chips': 170,
+        'shredded-cheese': 113
+    };
+    
+    function setVolume(amount, unit) {
+        document.getElementById('volume-amount').value = amount;
+        document.getElementById('volume-unit').value = unit;
+    }
+    
+    function convertBaking(event) {
+        event.preventDefault();
+        
+        const ingredient = document.getElementById('ingredient').value;
+        const volumeAmount = parseFloat(document.getElementById('volume-amount').value);
+        const volumeUnit = document.getElementById('volume-unit').value;
+        
+        // Validate inputs
+        if (!ingredient) {
+            alert('Please select an ingredient.');
+            return;
+        }
+        
+        if (isNaN(volumeAmount) || volumeAmount <= 0) {
+            alert('Please enter a valid volume amount greater than zero.');
+            return;
+        }
+        
+        // Get weight per cup for the ingredient
+        const weightPerCup = ingredientWeights[ingredient];
+        if (!weightPerCup) {
+            alert('Weight data not available for this ingredient.');
+            return;
+        }
+        
+        // Convert volume to cups first
+        let volumeInCups = 0;
+        
+        switch(volumeUnit) {
+            case 'cups':
+                volumeInCups = volumeAmount;
+                break;
+            case 'tablespoons':
+                volumeInCups = volumeAmount / 16;
+                break;
+            case 'teaspoons':
+                volumeInCups = volumeAmount / 48;
+                break;
+            case 'fluid-ounces':
+                volumeInCups = volumeAmount / 8;
+                break;
+            case 'milliliters':
+                volumeInCups = volumeAmount / 240;
+                break;
+        }
+        
+        // Calculate weight in grams
+        const weightGrams = volumeInCups * weightPerCup;
+        const weightKilograms = weightGrams / 1000;
+        
+        // Get ingredient name for display
+        const ingredientSelect = document.getElementById('ingredient');
+        const ingredientName = ingredientSelect.options[ingredientSelect.selectedIndex].text;
+        
+        // Display results
+        if (weightKilograms >= 1) {
+            document.getElementById('weight-result').textContent = 
+                weightKilograms.toFixed(2) + ' kg';
+        } else {
+            document.getElementById('weight-result').textContent = 
+                weightGrams.toFixed(1) + ' g';
+        }
+        
+        document.getElementById('grams-result').textContent = weightGrams.toFixed(1) + ' g';
+        document.getElementById('kilograms-result').textContent = weightKilograms.toFixed(3) + ' kg';
+        
+        // Conversion detail
+        document.getElementById('conversion-detail').textContent = 
+            `${volumeAmount} ${volumeUnit} of ${ingredientName} ≈ ${weightGrams.toFixed(1)} grams`;
+        
+        // Common conversions
+        const commonConversions = [];
+        
+        // 1 cup conversion
+        commonConversions.push(`
+            <div class="bg-slate-700/30 rounded p-2 border border-slate-600/30">
+                <p class="text-amber-300 font-semibold">1 cup</p>
+                <p class="text-gray-400">${weightPerCup} g</p>
+            </div>
+        `);
+        
+        // 1/2 cup conversion
+        commonConversions.push(`
+            <div class="bg-slate-700/30 rounded p-2 border border-slate-600/30">
+                <p class="text-amber-300 font-semibold">1/2 cup</p>
+                <p class="text-gray-400">${(weightPerCup / 2).toFixed(1)} g</p>
+            </div>
+        `);
+        
+        // 1/4 cup conversion
+        commonConversions.push(`
+            <div class="bg-slate-700/30 rounded p-2 border border-slate-600/30">
+                <p class="text-amber-300 font-semibold">1/4 cup</p>
+                <p class="text-gray-400">${(weightPerCup / 4).toFixed(1)} g</p>
+            </div>
+        `);
+        
+        // 1 tablespoon conversion
+        commonConversions.push(`
+            <div class="bg-slate-700/30 rounded p-2 border border-slate-600/30">
+                <p class="text-amber-300 font-semibold">1 Tbsp</p>
+                <p class="text-gray-400">${(weightPerCup / 16).toFixed(1)} g</p>
+            </div>
+        `);
+        
+        document.getElementById('common-conversions').innerHTML = commonConversions.join('');
+        
+        // Show result
+        document.getElementById('baking-result').classList.remove('hidden');
+        document.getElementById('baking-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

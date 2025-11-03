@@ -1,0 +1,605 @@
+<!-- Paint Coverage Calculator Page -->
+<!-- Calculate liters of paint required for wall areas -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Paint Coverage Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate liters of paint required for specific wall areas</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Input Method Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex items-center bg-slate-700/50 rounded-lg p-1 border border-slate-600">
+                <button 
+                    type="button"
+                    id="method-area"
+                    onclick="setInputMethod('area')"
+                    class="method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm">
+                    Total Area
+                </button>
+                <button 
+                    type="button"
+                    id="method-dimensions"
+                    onclick="setInputMethod('dimensions')"
+                    class="method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white">
+                    Dimensions
+                </button>
+            </div>
+        </div>
+
+        <!-- Paint Calculator Form -->
+        <form id="paint-form" class="space-y-6" onsubmit="calculatePaint(event)">
+            <!-- Total Area Input Method -->
+            <div id="input-area" class="space-y-4">
+                <div>
+                    <label for="total-area" class="block text-sm font-medium text-gray-300 mb-2">
+                        Total Wall Area
+                    </label>
+                    <div class="flex gap-4">
+                        <input 
+                            type="number" 
+                            id="total-area" 
+                            name="total-area"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                    <select 
+                        id="area-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="square-meters">m²</option>
+                        <option value="square-feet">ft²</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimensions Input Method -->
+            <div id="input-dimensions" class="hidden space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-3">Wall Dimensions</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="wall-length" class="block text-xs text-gray-400 mb-1">Length</label>
+                            <input 
+                                type="number" 
+                                id="wall-length" 
+                                name="wall-length"
+                                step="0.01"
+                                min="0"
+                                placeholder="0"
+                                class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="wall-height" class="block text-xs text-gray-400 mb-1">Height</label>
+                            <input 
+                                type="number" 
+                                id="wall-height" 
+                                name="wall-height"
+                                step="0.01"
+                                min="0"
+                                placeholder="0"
+                                class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <select 
+                        id="dimension-unit"
+                        class="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                        <option value="meters">Meters (m)</option>
+                        <option value="feet">Feet (ft)</option>
+                    </select>
+                </div>
+                
+                <!-- Number of Walls -->
+                <div>
+                    <label for="num-walls" class="block text-sm font-medium text-gray-300 mb-2">
+                        Number of Walls
+                    </label>
+                    <input 
+                        type="number" 
+                        id="num-walls" 
+                        name="num-walls"
+                        min="1"
+                        value="1"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                </div>
+            </div>
+
+            <!-- Areas to Subtract -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Areas to Subtract</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="doors-area" class="block text-xs text-gray-400 mb-1">Doors</label>
+                        <input 
+                            type="number" 
+                            id="doors-area" 
+                            name="doors-area"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Area of all doors</p>
+                    </div>
+                    <div>
+                        <label for="windows-area" class="block text-xs text-gray-400 mb-1">Windows</label>
+                        <input 
+                            type="number" 
+                            id="windows-area" 
+                            name="windows-area"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Area of all windows</p>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <label for="other-area" class="block text-xs text-gray-400 mb-1">Other (skirtings, moldings, etc.)</label>
+                    <input 
+                        type="number" 
+                        id="other-area" 
+                        name="other-area"
+                        step="0.01"
+                        min="0"
+                        value="0"
+                        placeholder="0"
+                        class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <select 
+                    id="subtract-unit"
+                    class="mt-2 w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                    <option value="square-meters">m²</option>
+                    <option value="square-feet">ft²</option>
+                </select>
+            </div>
+
+            <!-- Paint Coverage Rate -->
+            <div>
+                <label for="coverage-rate" class="block text-sm font-medium text-gray-300 mb-2">
+                    Paint Coverage Rate
+                </label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <button type="button" onclick="setCoverage(10)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">10 m²/L</button>
+                    <button type="button" onclick="setCoverage(12)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">12 m²/L</button>
+                    <button type="button" onclick="setCoverage(14)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">14 m²/L</button>
+                    <button type="button" onclick="setCoverage(16)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">16 m²/L</button>
+                </div>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="coverage-rate" 
+                        name="coverage-rate"
+                        step="0.1"
+                        min="1"
+                        value="12"
+                        placeholder="12"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                    <select 
+                        id="coverage-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="square-meters">m²/L</option>
+                        <option value="square-feet">ft²/L</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Standard: 10-14 m² per liter. Check paint can label for exact coverage.</p>
+            </div>
+
+            <!-- Number of Coats -->
+            <div>
+                <label for="num-coats" class="block text-sm font-medium text-gray-300 mb-2">
+                    Number of Coats
+                </label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <button type="button" onclick="setCoats(1)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 Coat</button>
+                    <button type="button" onclick="setCoats(2)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">2 Coats</button>
+                    <button type="button" onclick="setCoats(3)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">3 Coats</button>
+                </div>
+                <input 
+                    type="number" 
+                    id="num-coats" 
+                    name="num-coats"
+                    min="1"
+                    max="10"
+                    value="2"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                <p class="text-xs text-gray-500 mt-1">Standard is 2 coats for most paints</p>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Paint Needed
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="paint-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Result -->
+                    <div class="pb-4 border-b border-slate-600/50 text-center">
+                        <p class="text-sm text-gray-400 mb-2">Total Paint Required</p>
+                        <p class="text-4xl font-bold text-blue-400 mb-2" id="total-paint"></p>
+                        <p class="text-sm text-gray-400" id="paint-breakdown"></p>
+                    </div>
+
+                    <!-- Detailed Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Paintable Area</p>
+                            <p class="text-xl font-bold text-blue-300" id="paintable-area"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Per Coat</p>
+                            <p class="text-xl font-bold text-blue-300" id="paint-per-coat"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Coverage Rate</p>
+                            <p class="text-xl font-bold text-blue-300" id="coverage-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Paint Can Recommendations -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-3">Recommended Purchase</h4>
+                        <div id="can-recommendations" class="space-y-2">
+                            <!-- Can recommendations will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Calculation Details -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Paint Coverage
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    Paint coverage varies by paint type, surface texture, and application method. 
+                    Coverage rates are typically listed on paint can labels in square meters or square feet per liter/gallon.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Common Coverage Rates</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Interior Emulsion: 10-12 m²/L</li>
+                            <li>• Exterior Paint: 8-10 m²/L</li>
+                            <li>• Primer: 12-15 m²/L</li>
+                            <li>• Gloss Paint: 10-14 m²/L</li>
+                            <li>• Always check can label</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Factors Affecting Coverage</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Surface texture (rough uses more)</li>
+                            <li>• Paint color (darker may need 2+ coats)</li>
+                            <li>• Application method</li>
+                            <li>• Surface preparation</li>
+                            <li>• Paint quality</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Standard Can Sizes</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• 1 Liter</li>
+                            <li>• 2.5 Liters</li>
+                            <li>• 5 Liters</li>
+                            <li>• 10 Liters</li>
+                            <li>• 20 Liters</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-blue-400 mb-2">Tips</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Buy 10% extra for touch-ups</li>
+                            <li>• Mix cans for consistent color</li>
+                            <li>• Measure carefully</li>
+                            <li>• Account for waste</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-center space-y-2 mt-4">
+                    <p class="text-lg text-blue-300">Paint Needed = (Paintable Area / Coverage Rate) × Number of Coats</p>
+                    <p class="text-sm text-gray-400">Paintable Area = Total Area - Doors - Windows - Other</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Paint Calculator -->
+<script>
+    let currentMethod = 'area';
+    
+    function setInputMethod(method) {
+        currentMethod = method;
+        
+        const areaDiv = document.getElementById('input-area');
+        const dimensionsDiv = document.getElementById('input-dimensions');
+        const areaBtn = document.getElementById('method-area');
+        const dimensionsBtn = document.getElementById('method-dimensions');
+        
+        if (method === 'area') {
+            areaDiv.classList.remove('hidden');
+            dimensionsDiv.classList.add('hidden');
+            areaBtn.className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm';
+            dimensionsBtn.className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+        } else {
+            areaDiv.classList.add('hidden');
+            dimensionsDiv.classList.remove('hidden');
+            areaBtn.className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            dimensionsBtn.className = 'method-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm';
+        }
+        
+        document.getElementById('paint-result').classList.add('hidden');
+    }
+    
+    function setCoverage(rate) {
+        document.getElementById('coverage-rate').value = rate;
+    }
+    
+    function setCoats(coats) {
+        document.getElementById('num-coats').value = coats;
+    }
+    
+    function convertArea(value, unit) {
+        if (unit === 'square-meters') {
+            return value;
+        } else if (unit === 'square-feet') {
+            return value * 0.092903; // ft² to m²
+        }
+        return value;
+    }
+    
+    function convertToMeters(value, unit) {
+        if (unit === 'meters') {
+            return value;
+        } else if (unit === 'feet') {
+            return value * 0.3048;
+        }
+        return value;
+    }
+    
+    function formatLiters(liters) {
+        if (liters < 0.1) {
+            return (liters * 1000).toFixed(0) + ' mL';
+        } else if (liters < 1) {
+            return liters.toFixed(2) + ' L';
+        } else {
+            return liters.toFixed(2) + ' L';
+        }
+    }
+    
+    function calculatePaint(event) {
+        event.preventDefault();
+        
+        let totalAreaM2 = 0;
+        
+        // Get total area based on input method
+        if (currentMethod === 'area') {
+            const totalArea = parseFloat(document.getElementById('total-area').value);
+            const areaUnit = document.getElementById('area-unit').value;
+            
+            if (isNaN(totalArea) || totalArea <= 0) {
+                alert('Please enter a valid total area greater than zero.');
+                return;
+            }
+            
+            totalAreaM2 = convertArea(totalArea, areaUnit);
+            
+        } else {
+            // Calculate from dimensions
+            const wallLength = parseFloat(document.getElementById('wall-length').value);
+            const wallHeight = parseFloat(document.getElementById('wall-height').value);
+            const dimensionUnit = document.getElementById('dimension-unit').value;
+            const numWalls = parseInt(document.getElementById('num-walls').value) || 1;
+            
+            if (isNaN(wallLength) || wallLength <= 0) {
+                alert('Please enter a valid wall length greater than zero.');
+                return;
+            }
+            
+            if (isNaN(wallHeight) || wallHeight <= 0) {
+                alert('Please enter a valid wall height greater than zero.');
+                return;
+            }
+            
+            const lengthM = convertToMeters(wallLength, dimensionUnit);
+            const heightM = convertToMeters(wallHeight, dimensionUnit);
+            
+            totalAreaM2 = lengthM * heightM * numWalls;
+        }
+        
+        // Get areas to subtract
+        const doorsArea = parseFloat(document.getElementById('doors-area').value) || 0;
+        const windowsArea = parseFloat(document.getElementById('windows-area').value) || 0;
+        const otherArea = parseFloat(document.getElementById('other-area').value) || 0;
+        const subtractUnit = document.getElementById('subtract-unit').value;
+        
+        const doorsM2 = convertArea(doorsArea, subtractUnit);
+        const windowsM2 = convertArea(windowsArea, subtractUnit);
+        const otherM2 = convertArea(otherArea, subtractUnit);
+        
+        // Calculate paintable area
+        const paintableAreaM2 = totalAreaM2 - doorsM2 - windowsM2 - otherM2;
+        
+        if (paintableAreaM2 <= 0) {
+            alert('Paintable area must be greater than zero. Check your measurements.');
+            return;
+        }
+        
+        // Get coverage rate
+        const coverageRate = parseFloat(document.getElementById('coverage-rate').value);
+        const coverageUnit = document.getElementById('coverage-unit').value;
+        
+        if (isNaN(coverageRate) || coverageRate <= 0) {
+            alert('Please enter a valid coverage rate greater than zero.');
+            return;
+        }
+        
+        // Convert coverage rate to m²/L if needed
+        let coverageM2PerLiter = coverageRate;
+        if (coverageUnit === 'square-feet') {
+            // Convert ft²/L to m²/L
+            coverageM2PerLiter = coverageRate * 0.092903;
+        }
+        
+        // Get number of coats
+        const numCoats = parseInt(document.getElementById('num-coats').value) || 1;
+        
+        if (isNaN(numCoats) || numCoats <= 0) {
+            alert('Please enter a valid number of coats.');
+            return;
+        }
+        
+        // Calculate paint needed
+        const paintPerCoat = paintableAreaM2 / coverageM2PerLiter;
+        const totalPaintLiters = paintPerCoat * numCoats;
+        
+        // Add 10% for waste/touch-ups
+        const paintWithWaste = totalPaintLiters * 1.1;
+        
+        // Display results
+        document.getElementById('total-paint').textContent = formatLiters(paintWithWaste);
+        document.getElementById('paint-breakdown').textContent = 
+            `${formatLiters(totalPaintLiters)} base + ${formatLiters(totalPaintLiters * 0.1)} waste (10%)`;
+        
+        document.getElementById('paintable-area').textContent = 
+            paintableAreaM2.toFixed(2) + ' m² (' + (paintableAreaM2 * 10.764).toFixed(2) + ' ft²)';
+        document.getElementById('paint-per-coat').textContent = formatLiters(paintPerCoat);
+        document.getElementById('coverage-display').textContent = coverageM2PerLiter.toFixed(1) + ' m²/L';
+        
+        // Paint can recommendations
+        const canSizes = [1, 2.5, 5, 10, 20];
+        const recommendations = [];
+        
+        // Find optimal combination
+        let remaining = paintWithWaste;
+        const needed = {};
+        
+        // Start with largest cans
+        for (let i = canSizes.length - 1; i >= 0; i--) {
+            const size = canSizes[i];
+            const count = Math.floor(remaining / size);
+            if (count > 0) {
+                needed[size] = count;
+                remaining -= count * size;
+            }
+        }
+        
+        // If remaining is significant, add one more of smallest size
+        if (remaining > 0.5) {
+            needed[1] = (needed[1] || 0) + 1;
+            remaining = 0;
+        }
+        
+        if (Object.keys(needed).length > 0) {
+            recommendations.push(`
+                <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                    <p class="text-xs text-gray-400 mb-2">Recommended Purchase:</p>
+                    <div class="space-y-1">
+                        ${Object.entries(needed)
+                            .sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))
+                            .map(([size, count]) => `
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-300">${size}L cans</span>
+                                    <span class="text-sm font-semibold text-blue-300">× ${count}</span>
+                                </div>
+                            `).join('')}
+                        <div class="pt-2 mt-2 border-t border-slate-600/30 flex justify-between items-center">
+                            <span class="text-sm font-semibold text-gray-300">Total:</span>
+                            <span class="text-sm font-bold text-blue-400">${formatLiters(Object.entries(needed).reduce((sum, [size, count]) => sum + parseFloat(size) * count, 0))}</span>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+        
+        // Add alternative suggestions
+        const exactPaint = Math.ceil(paintWithWaste);
+        const nextSize = canSizes.find(size => size >= paintWithWaste) || canSizes[canSizes.length - 1];
+        
+        recommendations.push(`
+            <div class="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+                <p class="text-xs text-gray-400 mb-2">Alternative Options:</p>
+                <div class="space-y-1 text-xs text-gray-300">
+                    <div>Minimum needed: ${formatLiters(totalPaintLiters)}</div>
+                    <div>With waste (10%): ${formatLiters(paintWithWaste)}</div>
+                    <div>Round up to: ${formatLiters(Math.ceil(paintWithWaste))}</div>
+                </div>
+            </div>
+        `);
+        
+        document.getElementById('can-recommendations').innerHTML = recommendations.join('');
+        
+        // Calculation details
+        const details = [];
+        details.push(`Total Wall Area: ${totalAreaM2.toFixed(2)} m²`);
+        if (doorsM2 > 0 || windowsM2 > 0 || otherM2 > 0) {
+            details.push(`Subtractions:`);
+            if (doorsM2 > 0) details.push(`  - Doors: ${doorsM2.toFixed(2)} m²`);
+            if (windowsM2 > 0) details.push(`  - Windows: ${windowsM2.toFixed(2)} m²`);
+            if (otherM2 > 0) details.push(`  - Other: ${otherM2.toFixed(2)} m²`);
+        }
+        details.push(`Paintable Area: ${paintableAreaM2.toFixed(2)} m²`);
+        details.push(`Coverage Rate: ${coverageM2PerLiter.toFixed(1)} m² per liter`);
+        details.push(`Paint per Coat: ${paintPerCoat.toFixed(2)} L`);
+        details.push(`Number of Coats: ${numCoats}`);
+        details.push(`Total Paint: ${totalPaintLiters.toFixed(2)} L`);
+        details.push(`With 10% Waste: ${paintWithWaste.toFixed(2)} L`);
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('paint-result').classList.remove('hidden');
+        document.getElementById('paint-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Initialize with area method
+    setInputMethod('area');
+</script>
+

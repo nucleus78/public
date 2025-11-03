@@ -1,0 +1,463 @@
+<!-- Brick/Block Quantity Calculator Page -->
+<!-- Calculate number of bricks or blocks needed for a wall -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-stone-500 to-gray-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">Brick & Block Calculator</h1>
+        <p class="text-gray-400 text-lg">Estimate how many bricks or blocks are required for a wall, including mortar allowance</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Brick Calculator Form -->
+        <form id="brick-form" class="space-y-6" onsubmit="calculateBricks(event)">
+            <!-- Wall Dimensions -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Wall Dimensions</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="wall-length" class="block text-xs text-gray-400 mb-1">Length</label>
+                        <input 
+                            type="number" 
+                            id="wall-length" 
+                            name="wall-length"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="wall-height" class="block text-xs text-gray-400 mb-1">Height</label>
+                        <input 
+                            type="number" 
+                            id="wall-height" 
+                            name="wall-height"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="wall-thickness" class="block text-xs text-gray-400 mb-1">Thickness</label>
+                        <input 
+                            type="number" 
+                            id="wall-thickness" 
+                            name="wall-thickness"
+                            step="0.01"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                </div>
+                <select 
+                    id="dimension-unit"
+                    class="mt-2 w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent text-sm">
+                    <option value="meters">Meters (m)</option>
+                    <option value="feet">Feet (ft)</option>
+                    <option value="inches">Inches (in)</option>
+                </select>
+            </div>
+
+            <!-- Brick/Block Type Selection -->
+            <div>
+                <label for="block-type" class="block text-sm font-medium text-gray-300 mb-2">
+                    Brick/Block Type
+                </label>
+                <select 
+                    id="block-type" 
+                    name="block-type"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent text-lg">
+                    <option value="standard-brick">Standard Brick</option>
+                    <option value="modular-brick">Modular Brick</option>
+                    <option value="jumbo-brick">Jumbo Brick</option>
+                    <option value="concrete-block">Concrete Block (CMU)</option>
+                    <option value="concrete-block-half">Half Concrete Block</option>
+                    <option value="custom">Custom Size</option>
+                </select>
+            </div>
+
+            <!-- Custom Brick Dimensions (shown when custom selected) -->
+            <div id="custom-dimensions" class="hidden">
+                <label class="block text-sm font-medium text-gray-300 mb-3">Custom Brick/Block Dimensions</label>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label for="custom-length" class="block text-xs text-gray-400 mb-1">Length</label>
+                        <input 
+                            type="number" 
+                            id="custom-length" 
+                            step="0.1"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="custom-height" class="block text-xs text-gray-400 mb-1">Height</label>
+                        <input 
+                            type="number" 
+                            id="custom-height" 
+                            step="0.1"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="custom-thickness" class="block text-xs text-gray-400 mb-1">Thickness</label>
+                        <input 
+                            type="number" 
+                            id="custom-thickness" 
+                            step="0.1"
+                            min="0"
+                            placeholder="0"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    </div>
+                </div>
+                <select 
+                    id="custom-unit"
+                    class="mt-2 w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent text-sm">
+                    <option value="millimeters">Millimeters (mm)</option>
+                    <option value="inches">Inches (in)</option>
+                </select>
+            </div>
+
+            <!-- Mortar Joint Settings -->
+            <div>
+                <label for="mortar-joint" class="block text-sm font-medium text-gray-300 mb-2">
+                    Mortar Joint Thickness
+                </label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <button type="button" onclick="setMortarJoint(8)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">8mm</button>
+                    <button type="button" onclick="setMortarJoint(10)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">10mm</button>
+                    <button type="button" onclick="setMortarJoint(12)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">12mm</button>
+                    <button type="button" onclick="setMortarJoint(15)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">15mm</button>
+                    <button type="button" onclick="setMortarJoint(0.375)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">3/8"</button>
+                    <button type="button" onclick="setMortarJoint(0.5)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1/2"</button>
+                </div>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="mortar-joint" 
+                        name="mortar-joint"
+                        step="0.1"
+                        min="0"
+                        value="10"
+                        placeholder="10"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                    <select 
+                        id="mortar-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                        <option value="millimeters">Millimeters (mm)</option>
+                        <option value="inches">Inches (in)</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Standard is 10mm (3/8") for most projects</p>
+            </div>
+
+            <!-- Waste Allowance -->
+            <div>
+                <label for="waste-percentage" class="block text-sm font-medium text-gray-300 mb-2">
+                    Waste/Breakage Allowance (%)
+                </label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <button type="button" onclick="setWaste(0)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">0%</button>
+                    <button type="button" onclick="setWaste(5)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">5%</button>
+                    <button type="button" onclick="setWaste(10)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors font-semibold bg-gradient-to-r from-stone-600 to-gray-600 text-white">10%</button>
+                    <button type="button" onclick="setWaste(15)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">15%</button>
+                </div>
+                <input 
+                    type="number" 
+                    id="waste-percentage" 
+                    name="waste-percentage"
+                    step="0.5"
+                    min="0"
+                    max="50"
+                    value="10"
+                    class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">Recommended: 5-10% for most projects, 10-15% for complex work</p>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-stone-600 to-gray-600 rounded-lg font-semibold text-white hover:from-stone-700 hover:to-gray-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Bricks/Blocks Needed
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="brick-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Main Result -->
+                    <div class="pb-4 border-b border-slate-600/50 text-center">
+                        <p class="text-sm text-gray-400 mb-2">Total Bricks/Blocks Needed</p>
+                        <p class="text-4xl font-bold text-stone-400 mb-2" id="total-bricks"></p>
+                        <p class="text-sm text-gray-400" id="breakdown-text"></p>
+                    </div>
+
+                    <!-- Detailed Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Wall Area</p>
+                            <p class="text-xl font-bold text-stone-300" id="wall-area"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Bricks/Blocks per m²</p>
+                            <p class="text-xl font-bold text-stone-300" id="bricks-per-square"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Base Quantity</p>
+                            <p class="text-xl font-bold text-blue-300" id="base-quantity"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Waste Added</p>
+                            <p class="text-xl font-bold text-orange-300" id="waste-quantity"></p>
+                        </div>
+                    </div>
+
+                    <!-- Calculation Details -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Calculation Details</h4>
+                        <div id="calculation-details" class="text-sm text-gray-400 font-mono bg-slate-900/30 rounded p-3 space-y-1">
+                            <!-- Calculation details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About Brick/Block Calculations
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    This calculator accounts for mortar joints and calculates the number of bricks or blocks needed 
+                    based on wall dimensions, including waste allowance for breakage and cutting.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-stone-400 mb-2">Standard Sizes</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Standard Brick: 215×65×102.5mm</li>
+                            <li>• Modular Brick: 194×92×57mm</li>
+                            <li>• Concrete Block: 400×200×200mm</li>
+                            <li>• Half Block: 400×200×100mm</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-stone-400 mb-2">Mortar Joints</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Standard: 10mm (3/8")</li>
+                            <li>• Thin: 8mm (5/16")</li>
+                            <li>• Thick: 12-15mm (1/2")</li>
+                            <li>• Affects quantity needed</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-stone-400 mb-2">Waste Allowance</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Simple walls: 5%</li>
+                            <li>• Standard projects: 10%</li>
+                            <li>• Complex work: 15%</li>
+                            <li>• Accounts for cuts & breakage</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-stone-400 mb-2">Formula</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Wall Area = Length × Height</li>
+                            <li>• Bricks/m² = 1 / ((Brick Length + Mortar) × (Brick Height + Mortar))</li>
+                            <li>• Total = Area × Bricks/m² × (1 + Waste%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Brick Calculator -->
+<script>
+    // Brick/Block dimensions in millimeters (length × height × thickness)
+    const brickSizes = {
+        'standard-brick': { length: 215, height: 65, thickness: 102.5, name: 'Standard Brick' },
+        'modular-brick': { length: 194, height: 92, thickness: 57, name: 'Modular Brick' },
+        'jumbo-brick': { length: 290, height: 90, thickness: 90, name: 'Jumbo Brick' },
+        'concrete-block': { length: 400, height: 200, thickness: 200, name: 'Concrete Block (CMU)' },
+        'concrete-block-half': { length: 400, height: 200, thickness: 100, name: 'Half Concrete Block' },
+        'custom': { length: 0, height: 0, thickness: 0, name: 'Custom' }
+    };
+    
+    function setMortarJoint(value) {
+        document.getElementById('mortar-joint').value = value;
+        if (value < 1) {
+            document.getElementById('mortar-unit').value = 'inches';
+        } else {
+            document.getElementById('mortar-unit').value = 'millimeters';
+        }
+    }
+    
+    function setWaste(percentage) {
+        document.getElementById('waste-percentage').value = percentage;
+    }
+    
+    // Show/hide custom dimensions
+    document.getElementById('block-type').addEventListener('change', function() {
+        const customDiv = document.getElementById('custom-dimensions');
+        if (this.value === 'custom') {
+            customDiv.classList.remove('hidden');
+        } else {
+            customDiv.classList.add('hidden');
+        }
+    });
+    
+    function convertToMeters(value, unit) {
+        switch(unit) {
+            case 'meters':
+                return value;
+            case 'feet':
+                return value * 0.3048;
+            case 'inches':
+                return value * 0.0254;
+            default:
+                return value;
+        }
+    }
+    
+    function convertMMToMeters(value, unit) {
+        if (unit === 'millimeters') {
+            return value / 1000;
+        } else if (unit === 'inches') {
+            return value * 0.0254;
+        }
+        return value;
+    }
+    
+    function calculateBricks(event) {
+        event.preventDefault();
+        
+        const wallLength = parseFloat(document.getElementById('wall-length').value);
+        const wallHeight = parseFloat(document.getElementById('wall-height').value);
+        const wallThickness = parseFloat(document.getElementById('wall-thickness').value);
+        const dimensionUnit = document.getElementById('dimension-unit').value;
+        const blockType = document.getElementById('block-type').value;
+        const mortarJoint = parseFloat(document.getElementById('mortar-joint').value);
+        const mortarUnit = document.getElementById('mortar-unit').value;
+        const wastePercentage = parseFloat(document.getElementById('waste-percentage').value) || 0;
+        
+        // Validate inputs
+        if (isNaN(wallLength) || wallLength <= 0) {
+            alert('Please enter a valid wall length greater than zero.');
+            return;
+        }
+        
+        if (isNaN(wallHeight) || wallHeight <= 0) {
+            alert('Please enter a valid wall height greater than zero.');
+            return;
+        }
+        
+        // Convert wall dimensions to meters
+        const lengthM = convertToMeters(wallLength, dimensionUnit);
+        const heightM = convertToMeters(wallHeight, dimensionUnit);
+        
+        // Get brick dimensions
+        let brickLength, brickHeight;
+        
+        if (blockType === 'custom') {
+            const customLength = parseFloat(document.getElementById('custom-length').value);
+            const customHeight = parseFloat(document.getElementById('custom-height').value);
+            const customUnit = document.getElementById('custom-unit').value;
+            
+            if (isNaN(customLength) || customLength <= 0 || isNaN(customHeight) || customHeight <= 0) {
+                alert('Please enter valid custom brick dimensions.');
+                return;
+            }
+            
+            brickLength = convertMMToMeters(customLength, customUnit);
+            brickHeight = convertMMToMeters(customHeight, customUnit);
+        } else {
+            const brick = brickSizes[blockType];
+            brickLength = brick.length / 1000; // Convert mm to meters
+            brickHeight = brick.height / 1000;
+        }
+        
+        // Convert mortar joint to meters
+        const mortarM = convertMMToMeters(mortarJoint, mortarUnit);
+        
+        // Calculate wall area
+        const wallArea = lengthM * heightM;
+        
+        // Calculate effective brick size (including mortar)
+        const effectiveBrickLength = brickLength + mortarM;
+        const effectiveBrickHeight = brickHeight + mortarM;
+        
+        // Calculate bricks per square meter
+        const bricksPerSquareMeter = 1 / (effectiveBrickLength * effectiveBrickHeight);
+        
+        // Calculate base quantity needed
+        const baseQuantity = Math.ceil(wallArea * bricksPerSquareMeter);
+        
+        // Add waste allowance
+        const wasteAmount = Math.ceil(baseQuantity * (wastePercentage / 100));
+        const totalQuantity = baseQuantity + wasteAmount;
+        
+        // Display results
+        document.getElementById('total-bricks').textContent = totalQuantity.toLocaleString();
+        document.getElementById('breakdown-text').textContent = 
+            `${baseQuantity.toLocaleString()} base + ${wasteAmount.toLocaleString()} waste (${wastePercentage}%)`;
+        
+        document.getElementById('wall-area').textContent = 
+            wallArea.toFixed(2) + ' m² (' + (wallArea * 10.764).toFixed(2) + ' ft²)';
+        
+        document.getElementById('bricks-per-square').textContent = bricksPerSquareMeter.toFixed(1);
+        
+        document.getElementById('base-quantity').textContent = baseQuantity.toLocaleString();
+        document.getElementById('waste-quantity').textContent = 
+            wasteAmount.toLocaleString() + ' (' + wastePercentage + '%)';
+        
+        // Calculation details
+        const details = [];
+        details.push(`Wall: ${lengthM.toFixed(2)}m × ${heightM.toFixed(2)}m = ${wallArea.toFixed(2)} m²`);
+        details.push(`Brick Size: ${(brickLength * 1000).toFixed(0)}mm × ${(brickHeight * 1000).toFixed(0)}mm`);
+        details.push(`Mortar Joint: ${mortarJoint.toFixed(1)}${mortarUnit === 'millimeters' ? 'mm' : '"'}`);
+        details.push(`Effective Size: ${(effectiveBrickLength * 1000).toFixed(1)}mm × ${(effectiveBrickHeight * 1000).toFixed(1)}mm`);
+        details.push(`Bricks per m²: ${bricksPerSquareMeter.toFixed(2)}`);
+        details.push(`Base Quantity: ${baseQuantity.toLocaleString()} bricks/blocks`);
+        details.push(`Waste Allowance: ${wastePercentage}% = ${wasteAmount.toLocaleString()} extra`);
+        details.push(`Total Needed: ${totalQuantity.toLocaleString()} bricks/blocks`);
+        
+        document.getElementById('calculation-details').innerHTML = details.join('<br>');
+        
+        // Show result
+        document.getElementById('brick-result').classList.remove('hidden');
+        document.getElementById('brick-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+

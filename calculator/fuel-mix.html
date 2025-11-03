@@ -1,0 +1,403 @@
+<!-- 2-Stroke Fuel Mixing Calculator Page -->
+<!-- Calculate fuel to oil ratios for 2-stroke premix -->
+
+<div class="max-w-4xl mt-6 mx-auto">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <button 
+            hx-get="/fragments/home.html"
+            hx-target="#content-body"
+            hx-swap="innerHTML"
+            class="group inline-flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 hover:border-slate-600/50 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Calculators</span>
+        </button>
+    </div>
+
+    <!-- Calculator Header -->
+    <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-3">2-Stroke Fuel Mix Calculator</h1>
+        <p class="text-gray-400 text-lg">Calculate the correct fuel to oil ratio for 2-stroke premix</p>
+    </div>
+
+    <!-- Calculator Content Area -->
+    <div class="bg-slate-800/50 rounded-2xl p-6 md:p-8 border border-slate-700/50 backdrop-blur-sm">
+        <!-- Fuel Mix Calculator Form -->
+        <form id="fuel-mix-form" class="space-y-6" onsubmit="calculateFuelMix(event)">
+            <!-- Ratio Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Fuel to Oil Ratio</label>
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <button type="button" onclick="setRatio(16)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">16:1</button>
+                    <button type="button" onclick="setRatio(20)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">20:1</button>
+                    <button type="button" onclick="setRatio(25)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">25:1</button>
+                    <button type="button" onclick="setRatio(32)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">32:1</button>
+                    <button type="button" onclick="setRatio(40)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">40:1</button>
+                    <button type="button" onclick="setRatio(50)" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors font-semibold bg-gradient-to-r from-orange-600 to-red-600 text-white">50:1</button>
+                    <button type="button" onclick="setRatio('custom')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">Custom</button>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label for="ratio-fuel" class="block text-xs text-gray-400 mb-1">Fuel Parts</label>
+                        <input 
+                            type="number" 
+                            id="ratio-fuel" 
+                            name="ratio-fuel"
+                            min="1"
+                            value="50"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg text-center">
+                    </div>
+                    <div class="flex items-end pb-3">
+                        <span class="text-xl text-gray-400">:</span>
+                    </div>
+                    <div class="flex-1">
+                        <label for="ratio-oil" class="block text-xs text-gray-400 mb-1">Oil Parts</label>
+                        <input 
+                            type="number" 
+                            id="ratio-oil" 
+                            name="ratio-oil"
+                            min="1"
+                            value="1"
+                            class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg text-center">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Ratio: <span id="ratio-display" class="font-semibold text-orange-400">50:1</span></p>
+            </div>
+
+            <!-- Volume Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Volume Input</label>
+                <div class="flex justify-center mb-3">
+                    <div class="inline-flex items-center bg-slate-700/50 rounded-lg p-1 border border-slate-600">
+                        <button 
+                            type="button"
+                            id="volume-type-total"
+                            onclick="setVolumeType('total')"
+                            class="volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-sm">
+                            Total Fuel
+                        </button>
+                        <button 
+                            type="button"
+                            id="volume-type-gas"
+                            onclick="setVolumeType('gas')"
+                            class="volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white">
+                            Gas Only
+                        </button>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <input 
+                        type="number" 
+                        id="volume-input" 
+                        name="volume-input"
+                        step="0.01"
+                        min="0"
+                        placeholder="0"
+                        class="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg">
+                    <select 
+                        id="volume-unit"
+                        class="px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <option value="liters">Liters (L)</option>
+                        <option value="gallons">US Gallons (gal)</option>
+                        <option value="milliliters">Milliliters (mL)</option>
+                        <option value="fluid-ounces">Fluid Ounces (fl oz)</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 mt-1" id="volume-hint">Enter total volume of premix fuel needed</p>
+            </div>
+
+            <!-- Quick Volume Presets -->
+            <div>
+                <p class="text-xs text-gray-400 mb-2 text-center">Quick Presets:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button type="button" onclick="setVolume(1, 'liters')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 L</button>
+                    <button type="button" onclick="setVolume(5, 'liters')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">5 L</button>
+                    <button type="button" onclick="setVolume(1, 'gallons')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">1 US gal</button>
+                    <button type="button" onclick="setVolume(5, 'gallons')" class="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded text-xs text-gray-300 hover:text-white transition-colors">5 US gal</button>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button 
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg font-semibold text-white hover:from-orange-700 hover:to-red-700 transition-all shadow-lg hover:shadow-xl">
+                Calculate Fuel Mix
+            </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="fuel-mix-result" class="hidden mt-8">
+            <div class="bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl p-6 border border-slate-600/50">
+                <div class="space-y-4">
+                    <!-- Ratio Display -->
+                    <div class="pb-4 border-b border-slate-600/50 text-center">
+                        <p class="text-sm text-gray-400 mb-2">Fuel to Oil Ratio</p>
+                        <p class="text-3xl font-bold text-orange-400 font-mono" id="result-ratio"></p>
+                    </div>
+
+                    <!-- Mixing Results -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Gasoline Needed</p>
+                            <p class="text-xl font-bold text-blue-400" id="gas-result"></p>
+                            <p class="text-xs text-gray-500 mt-1" id="gas-result-alt"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Oil Needed</p>
+                            <p class="text-xl font-bold text-orange-400" id="oil-result"></p>
+                            <p class="text-xs text-gray-500 mt-1" id="oil-result-alt"></p>
+                        </div>
+                        <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                            <p class="text-xs text-gray-400 mb-1">Total Premix</p>
+                            <p class="text-xl font-bold text-green-400" id="total-result"></p>
+                            <p class="text-xs text-gray-500 mt-1" id="total-result-alt"></p>
+                        </div>
+                    </div>
+
+                    <!-- Mixing Instructions -->
+                    <div class="mt-4 pt-4 border-t border-slate-600/50">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Mixing Instructions</h4>
+                        <div id="mixing-instructions" class="text-sm text-gray-400 bg-slate-900/30 rounded p-3">
+                            <!-- Instructions will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formula Info Section -->
+    <div class="mt-8">
+        <div class="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                About 2-Stroke Fuel Mixing
+            </h3>
+            <div class="space-y-4 text-gray-300">
+                <p>
+                    2-stroke engines require oil to be mixed with gasoline since they don't have a separate oil system. 
+                    The ratio indicates how many parts of fuel to mix with one part of oil.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-orange-400 mb-2">Common Ratios</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• <strong>16:1</strong> - Older engines, heavy duty</li>
+                            <li>• <strong>25:1</strong> - Older 2-stroke engines</li>
+                            <li>• <strong>32:1</strong> - Many older engines</li>
+                            <li>• <strong>40:1</strong> - Common for many engines</li>
+                            <li>• <strong>50:1</strong> - Most modern engines</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
+                        <p class="text-sm font-semibold text-orange-400 mb-2">Mixing Tips</p>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• Always use 2-stroke specific oil</li>
+                            <li>• Use fresh, high-quality gasoline</li>
+                            <li>• Mix thoroughly before use</li>
+                            <li>• Use within 30 days of mixing</li>
+                            <li>• Check your engine manual for correct ratio</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30 mt-4">
+                    <p class="text-sm font-semibold text-orange-400 mb-2">Formula</p>
+                    <div class="text-xs text-gray-400 space-y-1">
+                        <p><strong>For Total Fuel:</strong> Oil = Total × (1 / (Ratio + 1))</p>
+                        <p><strong>For Gas Only:</strong> Oil = Gas × (1 / Ratio)</p>
+                        <p>Example: 5L gas at 50:1 = 5L × (1/50) = 0.1L = 100mL oil</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Fuel Mix Calculator -->
+<script>
+    let volumeType = 'total'; // 'total' or 'gas'
+    
+    function setRatio(ratio) {
+        if (ratio === 'custom') {
+            document.getElementById('ratio-fuel').focus();
+            return;
+        }
+        document.getElementById('ratio-fuel').value = ratio;
+        document.getElementById('ratio-oil').value = 1;
+        updateRatioDisplay();
+    }
+    
+    function updateRatioDisplay() {
+        const fuel = parseInt(document.getElementById('ratio-fuel').value) || 1;
+        const oil = parseInt(document.getElementById('ratio-oil').value) || 1;
+        document.getElementById('ratio-display').textContent = `${fuel}:${oil}`;
+    }
+    
+    function setVolumeType(type) {
+        volumeType = type;
+        
+        const totalBtn = document.getElementById('volume-type-total');
+        const gasBtn = document.getElementById('volume-type-gas');
+        const volumeHint = document.getElementById('volume-hint');
+        
+        if (type === 'total') {
+            totalBtn.className = 'volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-sm';
+            gasBtn.className = 'volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            volumeHint.textContent = 'Enter total volume of premix fuel needed';
+        } else {
+            totalBtn.className = 'volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-transparent text-gray-400 hover:text-white';
+            gasBtn.className = 'volume-type-toggle px-4 py-2 rounded-md text-sm font-medium transition-all bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-sm';
+            volumeHint.textContent = 'Enter volume of gasoline only';
+        }
+    }
+    
+    function setVolume(amount, unit) {
+        document.getElementById('volume-input').value = amount;
+        document.getElementById('volume-unit').value = unit;
+    }
+    
+    function formatVolume(value, unit) {
+        if (value === 0) return '0 ' + unit;
+        
+        if (value < 0.001) {
+            return (value * 1000).toFixed(2) + ' mL';
+        } else if (value < 1 && unit !== 'milliliters') {
+            return (value * 1000).toFixed(1) + ' mL';
+        } else {
+            return value.toFixed(2) + ' ' + unit;
+        }
+    }
+    
+    function convertToLiters(value, unit) {
+        switch(unit) {
+            case 'liters':
+                return value;
+            case 'gallons':
+                return value * 3.78541;
+            case 'milliliters':
+                return value / 1000;
+            case 'fluid-ounces':
+                return value * 0.0295735;
+            default:
+                return value;
+        }
+    }
+    
+    function convertFromLiters(value, targetUnit) {
+        switch(targetUnit) {
+            case 'liters':
+                return value;
+            case 'gallons':
+                return value / 3.78541;
+            case 'milliliters':
+                return value * 1000;
+            case 'fluid-ounces':
+                return value / 0.0295735;
+            default:
+                return value;
+        }
+    }
+    
+    function calculateFuelMix(event) {
+        event.preventDefault();
+        
+        const ratioFuel = parseFloat(document.getElementById('ratio-fuel').value);
+        const ratioOil = parseFloat(document.getElementById('ratio-oil').value);
+        const volumeInput = parseFloat(document.getElementById('volume-input').value);
+        const volumeUnit = document.getElementById('volume-unit').value;
+        
+        // Validate inputs
+        if (isNaN(ratioFuel) || ratioFuel <= 0) {
+            alert('Please enter a valid fuel ratio value greater than zero.');
+            return;
+        }
+        
+        if (isNaN(ratioOil) || ratioOil <= 0) {
+            alert('Please enter a valid oil ratio value greater than zero.');
+            return;
+        }
+        
+        if (isNaN(volumeInput) || volumeInput <= 0) {
+            alert('Please enter a valid volume greater than zero.');
+            return;
+        }
+        
+        // Convert volume to liters for calculations
+        const volumeLiters = convertToLiters(volumeInput, volumeUnit);
+        
+        let gasLiters, oilLiters, totalLiters;
+        
+        if (volumeType === 'total') {
+            // Total premix volume given
+            totalLiters = volumeLiters;
+            // Total = Gas + Oil, and Oil = Gas / Ratio
+            // Total = Gas + (Gas / Ratio) = Gas × (1 + 1/Ratio)
+            // Gas = Total / (1 + 1/Ratio) = Total × Ratio / (Ratio + 1)
+            const ratio = ratioFuel / ratioOil;
+            gasLiters = totalLiters * ratio / (ratio + 1);
+            oilLiters = totalLiters / (ratio + 1);
+        } else {
+            // Gas volume given
+            gasLiters = volumeLiters;
+            const ratio = ratioFuel / ratioOil;
+            oilLiters = gasLiters / ratio;
+            totalLiters = gasLiters + oilLiters;
+        }
+        
+        // Display ratio
+        document.getElementById('result-ratio').textContent = `${ratioFuel}:${ratioOil}`;
+        
+        // Display results in original unit and alternative
+        const originalUnitLabel = volumeUnit === 'liters' ? 'L' : 
+                                   volumeUnit === 'gallons' ? 'gal' :
+                                   volumeUnit === 'milliliters' ? 'mL' : 'fl oz';
+        
+        document.getElementById('gas-result').textContent = 
+            formatVolume(convertFromLiters(gasLiters, volumeUnit), originalUnitLabel);
+        document.getElementById('gas-result-alt').textContent = 
+            `(${formatVolume(gasLiters, 'liters')})`;
+        
+        document.getElementById('oil-result').textContent = 
+            formatVolume(convertFromLiters(oilLiters, volumeUnit), originalUnitLabel);
+        document.getElementById('oil-result-alt').textContent = 
+            `(${formatVolume(oilLiters, 'liters')})`;
+        
+        document.getElementById('total-result').textContent = 
+            formatVolume(convertFromLiters(totalLiters, volumeUnit), originalUnitLabel);
+        document.getElementById('total-result-alt').textContent = 
+            `(${formatVolume(totalLiters, 'liters')})`;
+        
+        // Mixing instructions
+        const instructions = [];
+        instructions.push(`1. Measure ${formatVolume(convertFromLiters(gasLiters, volumeUnit), originalUnitLabel)} of gasoline`);
+        instructions.push(`2. Add ${formatVolume(convertFromLiters(oilLiters, volumeUnit), originalUnitLabel)} of 2-stroke oil`);
+        instructions.push(`3. Mix thoroughly before use`);
+        instructions.push(`4. Use within 30 days`);
+        
+        document.getElementById('mixing-instructions').innerHTML = 
+            instructions.map(inst => `<div class="mb-1">${inst}</div>`).join('');
+        
+        // Show result
+        document.getElementById('fuel-mix-result').classList.remove('hidden');
+        document.getElementById('fuel-mix-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    // Update ratio display when ratio inputs change
+    document.getElementById('ratio-fuel').addEventListener('input', updateRatioDisplay);
+    document.getElementById('ratio-oil').addEventListener('input', updateRatioDisplay);
+    
+    // Initialize ratio display
+    updateRatioDisplay();
+</script>
+
