@@ -102,23 +102,30 @@
         }
     </style>
     <script>
-    let lastScrollY = 0;
-    const nav = document.querySelector('nav');
-    let ticking = false;
-    
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentY = window.scrollY;
-          if (currentY > lastScrollY && currentY > 10) {
-            nav.classList.add('hidden');
-          } else {
-            nav.classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', () => { // Wait for the DOM to be fully loaded
+      let lastScrollY = 0;
+      const nav = document.querySelector('nav');
+      let ticking = false;
+
+      // Add a check to ensure 'nav' is not null before proceeding
+      if (nav) {
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              const currentY = window.scrollY;
+              if (currentY > lastScrollY && currentY > 10) {
+                nav.classList.add('hidden');
+              } else {
+                nav.classList.remove('hidden');
+              }
+              lastScrollY = currentY;
+              ticking = false;
+            });
+            ticking = true;
           }
-          lastScrollY = currentY;
-          ticking = false;
         });
-        ticking = true;
+      } else {
+        console.warn("Navigation element (<nav>) not found in the DOM.");
       }
     });
     </script>
